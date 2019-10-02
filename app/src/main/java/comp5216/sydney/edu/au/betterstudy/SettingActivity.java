@@ -1,15 +1,20 @@
 package comp5216.sydney.edu.au.betterstudy;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 
@@ -33,7 +38,106 @@ public class SettingActivity extends AppCompatActivity {
         listView = (ListView)findViewById(R.id.listView);
         listAdapter = new ListAdapter(SettingActivity.this,settingElements);
         listView.setAdapter(listAdapter);
+        setupListViewListener();
+    }
 
+    public void setupListViewListener(){
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, final int position, long rowId) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(SettingActivity.this);
+                switch (position){
+                    case 4:
+                        builder.setTitle("Your user name")
+                                .setMessage("user name")
+                                .setPositiveButton("Back", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                                    }
+                                });
+                        builder.create().show();
+                        break;
+                    case 5:
+                        builder.setTitle("Your email address")
+                                .setMessage("email address")
+                                .setPositiveButton("Back", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                                    }
+                                });
+                        builder.create().show();
+                        break;
+                    case 6:
+                        builder.setTitle("Your phone number")
+                                .setMessage("phone number")
+                                .setPositiveButton("Back", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                                    }
+                                });
+                        builder.create().show();
+                        break;
+                    case 8:
+                        builder.setTitle("Help & FAQ")
+                                .setMessage("If you need help, please go to the website.")
+                                .setPositiveButton("Back", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                                    }
+                                });
+                        builder.create().show();
+                        break;
+                    case 9:
+                        EditText editText = new EditText(getApplicationContext());
+                        editText.setTextColor(Color.BLACK);
+                        builder.setTitle("Send Feedback")
+                                .setView(editText)
+                                .setPositiveButton("Send", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                                    }
+                                })
+                                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                                    }
+                                });
+                        builder.create().show();
+                        break;
+                    case 11:
+                        builder.setTitle("What's New?")
+                                .setMessage("This new version provides the function of ordering library's seat for you.")
+                                .setPositiveButton("Back", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                                    }
+                                });
+                        builder.create().show();
+                        break;
+                    case 12:
+                        builder.setTitle("Privacy Policy")
+                                .setMessage("Copyright is owned by Group 16.")
+                                .setPositiveButton("Back", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                                    }
+                                });
+                        builder.create().show();
+                        break;
+                    default:
+                        break;
+                        //throw new IllegalStateException("Unexpected value: " + position);
+                }
+            }
+        });
     }
 
     private class ListAdapter extends BaseAdapter{
