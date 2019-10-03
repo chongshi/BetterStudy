@@ -1,9 +1,8 @@
-package comp5216.sydney.edu.au.betterstudy;
+package comp5216.sydney.edu.au.betterstudy.ui.notifications;
 
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,38 +13,53 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 
+import comp5216.sydney.edu.au.betterstudy.R;
 
-//改用fragment之后，这个类不用了
-public class SettingActivity extends AppCompatActivity {
+public class NotificationsFragment extends Fragment {
+
+    private NotificationsViewModel notificationsViewModel;
 
     ListView listView;
 
     private ListAdapter listAdapter;
     private static final String[] settingElements = {"", "Account", "Upgrade Account", "SETTINGS", "User name",
-                                            "Your email address", "Your phone number", "SUPPORT",
-                                            "Help & FAQ", "Send Feedback", "ABOUT Better Study",
-                                            "What's New?", "Privacy Policy"};
+            "Your email address", "Your phone number", "SUPPORT",
+            "Help & FAQ", "Send Feedback", "ABOUT Better Study",
+            "What's New?", "Privacy Policy"};
 
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             ViewGroup container, Bundle savedInstanceState) {
+        notificationsViewModel =
+                ViewModelProviders.of(this).get(NotificationsViewModel.class);
+        View root = inflater.inflate(R.layout.activity_setting, container, false);
+       /* final TextView textView = root.findViewById(R.id.text_notifications);
+        notificationsViewModel.getText().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(@Nullable String s) {
+                textView.setText(s);
+            }
+        });*/
 
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_setting);
-        listView = (ListView)findViewById(R.id.listView);
-        listAdapter = new ListAdapter(SettingActivity.this,settingElements);
+        listView = (ListView)root.findViewById(R.id.listView);
+        listAdapter = new ListAdapter(getContext(),settingElements);
         listView.setAdapter(listAdapter);
         setupListViewListener();
+
+        return root;
     }
+
+
 
     public void setupListViewListener(){
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, final int position, long rowId) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(SettingActivity.this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 switch (position){
                     case 4:
                         builder.setTitle("Your user name")
@@ -92,7 +106,7 @@ public class SettingActivity extends AppCompatActivity {
                         builder.create().show();
                         break;
                     case 9:
-                        EditText editText = new EditText(getApplicationContext());
+                        EditText editText = new EditText(getContext());
                         editText.setTextColor(Color.BLACK);
                         builder.setTitle("Send Feedback")
                                 .setView(editText)
@@ -134,13 +148,13 @@ public class SettingActivity extends AppCompatActivity {
                         break;
                     default:
                         break;
-                        //throw new IllegalStateException("Unexpected value: " + position);
+                    //throw new IllegalStateException("Unexpected value: " + position);
                 }
             }
         });
     }
 
-    private class ListAdapter extends BaseAdapter{
+    private class ListAdapter extends BaseAdapter {
 
         private Context mContext;
         private String[] list;

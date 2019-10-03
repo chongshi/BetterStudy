@@ -6,20 +6,20 @@
     android:layout_height="match_parent"
     tools:context="comp5216.sydney.edu.au.betterstudy.SettingActivity">
 
-    <GridView
-        android:id="@+id/gridView"
+
+    <TextView
+        android:id="@+id/replacebottomnaviplace"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:numColumns="3"
-        android:layout_marginBottom="2dp"
+        android:layout_height="57dp"
         android:layout_alignParentBottom="true" />
 
     <ListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
         android:layout_height="555dp"
-        android:layout_below="@id/setting"
+        android:layout_alignParentTop="true"
         android:layout_above="@id/version">
+
     </ListView>
 
     <TextView
@@ -28,17 +28,18 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="Better Study Version 1.0"
-        android:layout_above="@id/gridView"
-        android:textSize="15sp" />
+        android:textSize="15sp"
+        android:layout_above="@id/replacebottomnaviplace"
+        />
 
-    <TextView
+    <!--<TextView
         android:id="@+id/setting"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="Settings"
         android:textSize="25sp"
-        android:textColor="#ff000000"/>
+        android:textColor="#ff000000"/>-->
 
 
 </RelativeLayout>
