@@ -3,7 +3,6 @@ package comp5216.sydney.edu.au.betterstudy;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,7 +33,7 @@ public class SettingActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_setting);
+        setContentView(R.layout.fragment_setting);
         listView = (ListView)findViewById(R.id.listView);
         listAdapter = new ListAdapter(SettingActivity.this,settingElements);
         listView.setAdapter(listAdapter);
