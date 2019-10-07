@@ -21,17 +21,23 @@ import androidx.lifecycle.ViewModelProviders;
 
 import comp5216.sydney.edu.au.betterstudy.R;
 import comp5216.sydney.edu.au.betterstudy.ui.dashboard.DashboardFragment;
+import comp5216.sydney.edu.au.betterstudy.ui.notifications.NotificationsFragment;
 
 public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
+    private FragmentManager manager;
+    private FragmentTransaction ft;
+    private ImageView img1;
+    private ImageView img2;
+    private View root;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         homeViewModel =
                 ViewModelProviders.of(this).get(HomeViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_library, container, false);
+        root = inflater.inflate(R.layout.fragment_library, container, false);
 /*        final TextView textView = root.findViewById(R.id.text_home);
         homeViewModel.getText().observe(this, new Observer<String>() {
             @Override
@@ -39,7 +45,39 @@ public class HomeFragment extends Fragment {
                 textView.setText(s);
             }
         });*/
+        img1 = root.findViewById(R.id.lib1);
+        img2 = root.findViewById(R.id.lib2);
+        manager = getFragmentManager();
+        setupImageListener();
         return root;
     }
 
+    private void setupImageListener(){
+        img1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putString("library", "UNSW");
+                NotificationsFragment df = new NotificationsFragment();
+                df.setArguments(bundle);
+                ft = manager.beginTransaction();
+                ft.replace(R.id.nav_host_fragment, df);
+                ft.addToBackStack(null);
+                ft.commit();
+            }
+        });
+        img2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putString("library", "Fisher");
+                NotificationsFragment df = new NotificationsFragment();
+                df.setArguments(bundle);
+                ft = manager.beginTransaction();
+                ft.replace(R.id.nav_host_fragment, df);
+                ft.addToBackStack(null);
+                ft.commit();
+            }
+        });
+    }
 }
