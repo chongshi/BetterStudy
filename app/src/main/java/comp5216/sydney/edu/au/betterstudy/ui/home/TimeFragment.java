@@ -38,8 +38,6 @@ public class TimeFragment extends Fragment {
     private String date;
     private Date today;
     private boolean isTomorrow;
-    private boolean isHourSelected;
-    private boolean isdateSelected;
     final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
     final SimpleDateFormat hourFormat = new SimpleDateFormat("HH");
     final SimpleDateFormat dataFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
@@ -76,7 +74,6 @@ public class TimeFragment extends Fragment {
             @Override
             public void onTimeChanged(TimePicker timePicker, int hour, int min) {
                 if (judgeHour(hour, String.valueOf(hour), hour2)) {
-                    isHourSelected = true;
                     hour1 = String.valueOf(hour);
                     timeDisplay();
                 } else {
@@ -92,7 +89,6 @@ public class TimeFragment extends Fragment {
             @Override
             public void onTimeChanged(TimePicker timePicker, int hour, int min) {
                 if (judgeHour(hour, hour1, String.valueOf(hour))) {
-                    isHourSelected = true;
                     hour2 = String.valueOf(hour);
                     timeDisplay();
                 } else {
@@ -145,7 +141,6 @@ public class TimeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 isTomorrow = false;
-                isdateSelected = true;
                 date = dateFormat.format(today);
                 timeDisplay();
             }
@@ -155,7 +150,6 @@ public class TimeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 isTomorrow = true;
-                isdateSelected = true;
                 Calendar calendar = new GregorianCalendar();
                 calendar.setTime(today);
                 calendar.add(calendar.DATE, 1);
@@ -184,7 +178,7 @@ public class TimeFragment extends Fragment {
             String date2;
             @Override
             public void onClick(View v) {
-                if (isdateSelected && isHourSelected) {
+                if (!(hour1 == null || hour2 == null || hour1.equals("HH") || hour2.equals("HH"))&&date!=null) {
                     String[] date = timeText.getText().toString().split(" — ");
                     System.out.println(date[0] + date[1]);
                     try {
