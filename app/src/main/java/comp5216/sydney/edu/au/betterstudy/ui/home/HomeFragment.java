@@ -12,7 +12,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import comp5216.sydney.edu.au.betterstudy.R;
-import comp5216.sydney.edu.au.betterstudy.ui.notifications.NotificationsFragment;
 
 public class HomeFragment extends Fragment {
 
@@ -45,12 +44,9 @@ public class HomeFragment extends Fragment {
             public void onClick(View v) {
                 Bundle bundle = new Bundle();
                 bundle.putString("library", "UNSW");
-                TimeFragment df = new TimeFragment();
-                df.setArguments(bundle);
-                ft = manager.beginTransaction();
-                ft.replace(R.id.nav_host_fragment, df);
-                ft.addToBackStack(null);
-                ft.commit();
+                TimeFragment timeFragment = new TimeFragment();
+                timeFragment.setArguments(bundle);
+                manager.beginTransaction().replace(R.id.nav_host_fragment, timeFragment).addToBackStack(null).commit();
             }
         });
         img2.setOnClickListener(new View.OnClickListener() {
@@ -58,12 +54,9 @@ public class HomeFragment extends Fragment {
             public void onClick(View v) {
                 Bundle bundle = new Bundle();
                 bundle.putString("library", "Fisher");
-                TimeFragment df = new TimeFragment();
-                df.setArguments(bundle);
-                ft = manager.beginTransaction();
-                ft.replace(R.id.nav_host_fragment, df);
-                ft.addToBackStack(null);
-                ft.commit();
+                TimeFragment timeFragment = new TimeFragment();
+                timeFragment.setArguments(bundle);
+                manager.beginTransaction().replace(R.id.nav_host_fragment, timeFragment).addToBackStack(null).commit();
             }
         });
     }
