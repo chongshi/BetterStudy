@@ -2,6 +2,7 @@ package comp5216.sydney.edu.au.betterstudy.ui.home;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +23,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import comp5216.sydney.edu.au.betterstudy.MainActivity;
 import comp5216.sydney.edu.au.betterstudy.R;
 
 public class TimeFragment extends Fragment {
@@ -33,6 +35,7 @@ public class TimeFragment extends Fragment {
     private RadioButton tomorrowBtn;
     private Button setBtn;
     private Button cancelBtn;
+    private Button map;
     private String hour1;
     private String hour2;
     private String date;
@@ -57,6 +60,7 @@ public class TimeFragment extends Fragment {
         tomorrowBtn = root.findViewById(R.id.tomorrowBtn);
         setBtn = root.findViewById(R.id.setBtn);
         cancelBtn = root.findViewById(R.id.cancelBtn);
+        map = root.findViewById(R.id.button);
         timePicker1.setIs24HourView(true);
         timePicker2.setIs24HourView(true);
         setRadioButtonListener();
@@ -211,6 +215,15 @@ public class TimeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 manager.popBackStack();
+            }
+        });
+        map.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent();
+                intent.setClass(getActivity(), Main2Activity.class);
+                startActivity(intent);
             }
         });
     }
