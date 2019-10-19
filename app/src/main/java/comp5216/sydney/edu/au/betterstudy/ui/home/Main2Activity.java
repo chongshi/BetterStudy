@@ -58,5 +58,6 @@ public class Main2Activity extends AppCompatActivity {
         });
         seatTableView.setData(10, 15);
 
+        seatTableView.setMaxSelected(1);
     }
 }

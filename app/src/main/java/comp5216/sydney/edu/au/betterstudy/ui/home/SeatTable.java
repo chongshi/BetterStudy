@@ -342,7 +342,7 @@ public class SeatTable extends View {
 
         headPaint = new Paint();
         headPaint.setStyle(Paint.Style.FILL);
-        headPaint.setTextSize(24);
+        headPaint.setTextSize(40);
         headPaint.setColor(Color.WHITE);
         headPaint.setAntiAlias(true);
 
@@ -396,7 +396,7 @@ public class SeatTable extends View {
             headBitmap = drawHeadInfo();
         }
         canvas.drawBitmap(headBitmap, 0, 0, null);
-        drawScreen(canvas);
+        //    drawScreen(canvas);
         if (isDrawOverview) {
             long s = System.currentTimeMillis();
             if (isDrawOverviewBitmap) {
@@ -493,19 +493,19 @@ public class SeatTable extends View {
         tempMatrix.setScale(xScale1, yScale1);
         tempMatrix.postTranslate(startX, (headHeight - seatHeight) / 2);
         canvas.drawBitmap(seatBitmap, tempMatrix, headPaint);
-        canvas.drawText("可选", startX + seatWidth + spacing1, txtY, headPaint);
+        canvas.drawText("Available", startX + seatWidth + spacing1, txtY, headPaint);
 
         float soldSeatBitmapY = startX + seatBitmap.getWidth() + spacing1 + txtWidth + spacing;
         tempMatrix.setScale(xScale1, yScale1);
         tempMatrix.postTranslate(soldSeatBitmapY, (headHeight - seatHeight) / 2);
         canvas.drawBitmap(seatSoldBitmap, tempMatrix, headPaint);
-        canvas.drawText("已售", soldSeatBitmapY + seatWidth + spacing1, txtY, headPaint);
+        canvas.drawText("Close", soldSeatBitmapY + seatWidth + spacing1, txtY, headPaint);
 
         float checkedSeatBitmapX = soldSeatBitmapY + seatSoldBitmap.getWidth() + spacing1 + txtWidth + spacing;
         tempMatrix.setScale(xScale1, yScale1);
         tempMatrix.postTranslate(checkedSeatBitmapX, (headHeight - seatHeight) / 2);
         canvas.drawBitmap(checkedSeatBitmap, tempMatrix, headPaint);
-        canvas.drawText("已选", checkedSeatBitmapX + spacing1 + seatWidth, txtY, headPaint);
+        canvas.drawText("Select", checkedSeatBitmapX + spacing1 + seatWidth, txtY, headPaint);
 
         //绘制分割线
         headPaint.setStrokeWidth(1);
@@ -1053,7 +1053,7 @@ public class SeatTable extends View {
                                 }
                             } else {
                                 if (selects.size() >= maxSelected) {
-                                    Toast.makeText(getContext(), "最多只能选择" + maxSelected + "个", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), "Choose up to" + maxSelected, Toast.LENGTH_SHORT).show();
                                     return super.onSingleTapConfirmed(e);
                                 } else {
                                     addChooseSeat(i, j);

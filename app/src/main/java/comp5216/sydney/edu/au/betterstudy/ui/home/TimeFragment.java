@@ -221,6 +221,7 @@ public class TimeFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
+
                 Intent intent = new Intent();
                 intent.setClass(getActivity(), Main2Activity.class);
                 startActivity(intent);
