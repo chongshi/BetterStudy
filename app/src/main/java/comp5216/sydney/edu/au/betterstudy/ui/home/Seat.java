@@ -22,7 +22,10 @@ public class Seat extends Fragment {
 
         super.onCreate(savedInstanceState);
         String library = getArguments().getString("library");
+        String date1 = getArguments().getString("date1");
+        String date2 = getArguments().getString("date2");
         Toast.makeText(getActivity(), "Library: " + library, Toast.LENGTH_SHORT).show();
+        System.out.println(date1+"********************"+date2);
         View root = inflater.inflate(R.layout.activity_main2, container, false);
 
         SeatTable seatTableView = (SeatTable) root.findViewById(R.id.mSearchView);

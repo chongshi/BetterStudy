@@ -13,7 +13,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import comp5216.sydney.edu.au.betterstudy.R;
 
-public class HomeFragment extends Fragment {
+public class LibraryFragment extends Fragment {
 
     private FragmentManager manager;
     private FragmentTransaction ft;
