@@ -221,10 +221,20 @@ public class TimeFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
+                Bundle bundle = new Bundle();
+                String library = getArguments().getString("library");
+                bundle.putString("library", library);
+                Seat seat = new Seat();
+                seat.setArguments(bundle);
+                manager.beginTransaction().replace(R.id.nav_host_fragment, seat).addToBackStack(null).commit();
 
+/*
                 Intent intent = new Intent();
+
+                String library = getArguments().getString("library");
+                intent.putExtra("1",library);
                 intent.setClass(getActivity(), Main2Activity.class);
-                startActivity(intent);
+                startActivity(intent);*/
             }
         });
     }
