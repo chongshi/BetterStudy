@@ -155,11 +155,12 @@ public class TimeFragment extends Fragment {
                 if (hour2 != null) {
                     if (hour2.equals("0")) {
                         nextDate = dateAddOne(date);
-                    } else {
+                    }else{
                         nextDate = date;
                     }
+                }else {
+                    nextDate = date;
                 }
-                nextDate = date;
                 timeDisplay();
             }
         });
@@ -175,11 +176,12 @@ public class TimeFragment extends Fragment {
                 if (hour2 != null) {
                     if (hour2.equals("0")) {
                         nextDate = dateAddOne(date);
-                    } else {
+                    }else{
                         nextDate = date;
                     }
+                }else {
+                    nextDate = date;
                 }
-                nextDate = date;
                 timeDisplay();
             }
         });
@@ -192,10 +194,11 @@ public class TimeFragment extends Fragment {
             Calendar calendar = new GregorianCalendar();
             try {
                 calendar.setTime(dateFormat.parse(date));
-                calendar.add(calendar.DATE, 1);
+                System.out.println("*******************************"+date+"****************"+dateFormat.format(calendar.getTime()));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
+            calendar.add(calendar.DATE, 1);
             return dateFormat.format(calendar.getTime());
         }
     }
