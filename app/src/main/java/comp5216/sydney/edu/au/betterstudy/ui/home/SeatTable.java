@@ -230,6 +230,7 @@ public class SeatTable extends View {
      * 座位已经选中
      */
     private static final int SEAT_TYPE_SELECTED = 2;
+    private int I, J;
 
     /**
      * 座位可选
@@ -536,7 +537,7 @@ public class SeatTable extends View {
         path.lineTo(centerX + screenWidth / 2, startY);
         canvas.drawPath(path, pathPaint);
         pathPaint.setColor(Color.BLACK);
-        pathPaint.setTextSize(20 * getMatrixScaleX());
+        pathPaint.setTextSize(40 * getMatrixScaleX());
         canvas.drawText(screenName, centerX - pathPaint.measureText(screenName) / 2, getBaseLine(pathPaint, startY, startY + screenHeight * getMatrixScaleY()), pathPaint);
     }
 
@@ -578,6 +579,8 @@ public class SeatTable extends View {
                     case SEAT_TYPE_SELECTED:
                         canvas.drawBitmap(checkedSeatBitmap, tempMatrix, paint);
                         drawText(canvas, i, j, top, left);
+                        I = i;
+                        J = j;
                         break;
                     case SEAT_TYPE_SOLD:
                         canvas.drawBitmap(seatSoldBitmap, tempMatrix, paint);
@@ -622,8 +625,8 @@ public class SeatTable extends View {
      */
     private void drawText(Canvas canvas, int row, int column, float top, float left) {
 
-        String txt = (row + 1) + "排";
-        String txt1 = (column + 1) + "座";
+        String txt = (row + 1) + "R";
+        String txt1 = (column + 1) + "C";
 
         if (seatChecker != null) {
             String[] strings = seatChecker.checkedSeatTxt(row, column);
@@ -1045,6 +1048,8 @@ public class SeatTable extends View {
                     if (seatChecker != null && seatChecker.isValidSeat(i, j) && !seatChecker.isSold(i, j)) {
                         if (x >= tempX && x <= maxTemX && y >= tempY && y <= maxTempY) {
                             int id = getID(i, j);
+
+
                             int index = isHave(id);
                             if (index >= 0) {
                                 remove(index);
@@ -1177,4 +1182,15 @@ public class SeatTable extends View {
         }
         return result;
     }
+
+    public void saveseat(String d, String s, String f) {
+
+        comp5216.sydney.edu.au.betterstudy.model.Seat seat = new comp5216.sydney.edu.au.betterstudy.model.Seat(I, J, d, s, f);
+        Seat.seats.add(seat);
+        System.out.println(I + J);
+
+    }
+
+
+
 }

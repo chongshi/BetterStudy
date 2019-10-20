@@ -39,11 +39,13 @@ public class TimeFragment extends Fragment {
     private String hour2;
     private String date;
     private String nextDate;
-    private Date today;
+    private String S, F;
+    private Date today, sdate, fdate;
     private boolean isTomorrow;
     final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
     final SimpleDateFormat hourFormat = new SimpleDateFormat("HH");
     final SimpleDateFormat dataFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+    final SimpleDateFormat DHFormat = new SimpleDateFormat("dd:");
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -152,6 +154,8 @@ public class TimeFragment extends Fragment {
             public void onClick(View v) {
                 isTomorrow = false;
                 date = dateFormat.format(today);
+                sdate = today;
+                fdate = today;
                 if (hour2 != null) {
                     if (hour2.equals("0")) {
                         nextDate = dateAddOne(date);
@@ -182,6 +186,9 @@ public class TimeFragment extends Fragment {
                 }else {
                     nextDate = date;
                 }
+                date = dateFormat.format(calendar.getTime());
+                sdate = calendar.getTime();
+                fdate = calendar.getTime();
                 timeDisplay();
             }
         });
@@ -211,6 +218,11 @@ public class TimeFragment extends Fragment {
         }
         if (date == null) {
             date = "dd/MM/yyyy";
+        }
+        timeText.setText(date + " " + hour1 + ":00" + " - " + date + " " + hour2 + ":00");
+        if (sdate != null && fdate != null) {
+            S = DHFormat.format(sdate) + hour1;
+            F = DHFormat.format(fdate) + hour2;
         }
         if (nextDate == null) {
             nextDate = "dd/MM/yyyy";
@@ -245,6 +257,8 @@ public class TimeFragment extends Fragment {
                                     bundle.putString("library", library);
                                     bundle.putString("date1", date1);
                                     bundle.putString("date2", date2);
+                                    bundle.putString("S", S);
+                                    bundle.putString("F", F);
                                     Seat seat = new Seat();
                                     seat.setArguments(bundle);
                                     manager.beginTransaction().replace(R.id.nav_host_fragment, seat).addToBackStack(null).commit();

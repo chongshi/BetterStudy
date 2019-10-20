@@ -1,9 +1,48 @@
 package comp5216.sydney.edu.au.betterstudy.model;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 public class Seat {
+
+
+    int I, J, va;
+    String st, ft, da;
+    Date sdate, fdate;
+
+    public Seat() {
+
+    }
+
+    public Seat(int i, int j, String d, String s, String f) {
+        I = i;
+        J = j;
+        da = d;
+        st = s;
+        ft = f;
+
+    }
+
+    public String getDa() {
+        return da;
+    }
+
+    public int getI() {
+        return I;
+    }
+
+    public int getJ() {
+        return J;
+    }
+
+    public String getFt() {
+        return ft;
+    }
+
+    public String getSt() {
+        return st;
+    }
 
     private String seatNumber;
     //用 Date类型的列表来存座位的状态 例如 几点被预定了就往list 里面加个时间
