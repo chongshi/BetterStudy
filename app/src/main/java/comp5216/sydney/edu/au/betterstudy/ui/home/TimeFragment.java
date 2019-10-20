@@ -194,7 +194,6 @@ public class TimeFragment extends Fragment {
             Calendar calendar = new GregorianCalendar();
             try {
                 calendar.setTime(dateFormat.parse(date));
-                System.out.println("*******************************"+date+"****************"+dateFormat.format(calendar.getTime()));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
