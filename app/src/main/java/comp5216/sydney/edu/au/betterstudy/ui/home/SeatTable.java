@@ -396,7 +396,7 @@ public class SeatTable extends View {
             headBitmap = drawHeadInfo();
         }
         canvas.drawBitmap(headBitmap, 0, 0, null);
-        //    drawScreen(canvas);
+        drawScreen(canvas);
         if (isDrawOverview) {
             long s = System.currentTimeMillis();
             if (isDrawOverviewBitmap) {

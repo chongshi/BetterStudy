@@ -20,9 +20,10 @@
 
     <TextView
         android:id="@+id/tipText"
-        android:layout_width="350dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
         android:layout_marginTop="30dp"
         android:text="Tips: You can only choose any 1 or 2 hour(s) from today to tomorrow"
         android:textColor="@color/design_default_color_primary_dark"
@@ -106,12 +107,12 @@
         android:id="@+id/textTime"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:text="TIME DISPLAY"
         android:gravity="center"
         android:textColor="?attr/colorPrimaryDark"
-        android:textSize="20sp"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/timePicker2" />
@@ -136,17 +137,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/setBtn"
         app:layout_constraintTop_toBottomOf="@id/textTime" />
-
-    <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:text="MAP"
-        app:layout_constraintEnd_toStartOf="@+id/timePicker1"
-        app:layout_constraintHorizontal_bias="0.476"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView1" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

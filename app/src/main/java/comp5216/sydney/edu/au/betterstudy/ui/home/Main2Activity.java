@@ -2,6 +2,7 @@ package comp5216.sydney.edu.au.betterstudy.ui.home;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -17,14 +18,10 @@ public class Main2Activity extends AppCompatActivity {
 
         final SeatTable seatTableView = (SeatTable) findViewById(R.id.mSearchView);
 
+        Intent intent = new Intent();
+        intent.getExtras();
 
-        seatTableView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-
-            }
-        });
+        ;
 
         seatTableView.setSeatChecker(new SeatTable.SeatChecker() {
 

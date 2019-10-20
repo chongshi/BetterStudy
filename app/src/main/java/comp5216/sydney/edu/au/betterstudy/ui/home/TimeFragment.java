@@ -35,15 +35,14 @@ public class TimeFragment extends Fragment {
     private RadioButton tomorrowBtn;
     private Button setBtn;
     private Button cancelBtn;
-    private Button map;
     private String hour1;
     private String hour2;
     private String date;
     private Date today;
     private boolean isTomorrow;
-    final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+    final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
     final SimpleDateFormat hourFormat = new SimpleDateFormat("HH");
-    final SimpleDateFormat dataFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+    final SimpleDateFormat dataFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -60,7 +59,6 @@ public class TimeFragment extends Fragment {
         tomorrowBtn = root.findViewById(R.id.tomorrowBtn);
         setBtn = root.findViewById(R.id.setBtn);
         cancelBtn = root.findViewById(R.id.cancelBtn);
-        map = root.findViewById(R.id.button);
         timePicker1.setIs24HourView(true);
         timePicker2.setIs24HourView(true);
         setRadioButtonListener();
@@ -104,10 +102,9 @@ public class TimeFragment extends Fragment {
     }
 
     public boolean judgeHour(int hour, String hour1, String hour2) {
-        // System.out.println(hour+"****"+Integer.parseInt(hourFormat.format(today)));
         if (hour1 == null || hour2 == null || hour1.equals("HH") || hour2.equals("HH")) {
             if (!isTomorrow) {
-                if (hour <= Integer.parseInt(hourFormat.format(today))) {
+                if (hour <= Integer.parseInt(hourFormat.format(today))&&hour!=0) {
                     Toast.makeText(getActivity(), "Please choose future time", Toast.LENGTH_SHORT).show();
                     return false;
                 } else {
@@ -171,20 +168,20 @@ public class TimeFragment extends Fragment {
             hour2 = "HH";
         }
         if (date == null) {
-            date = "dd-MM-yyyy";
+            date = "dd/MM/yyyy";
         }
-        timeText.setText(date + " " + hour1 + ":00" + " — " + date + " " + hour2 + ":00");
+        timeText.setText(date + " " + hour1 + ":00" + " - " + date + " " + hour2 + ":00");
     }
 
     public void setButtonListener() {
         setBtn.setOnClickListener(new View.OnClickListener() {
             String date1;
             String date2;
+
             @Override
             public void onClick(View v) {
-                if (!(hour1 == null || hour2 == null || hour1.equals("HH") || hour2.equals("HH"))&&date!=null) {
-                    String[] date = timeText.getText().toString().split(" — ");
-                    System.out.println(date[0] + date[1]);
+                if (!(hour1 == null || hour2 == null || hour1.equals("HH") || hour2.equals("HH")) && date != null) {
+                    String[] date = timeText.getText().toString().split(" - ");
                     try {
                         date1 = dataFormat.format(dataFormat.parse(date[0]));
                         date2 = dataFormat.format(dataFormat.parse(date[1]));
@@ -193,17 +190,19 @@ public class TimeFragment extends Fragment {
                     }
                     new AlertDialog.Builder(getActivity())
                             .setTitle("Confirmation")
-                            .setMessage("Are you sure to set this time?\n" + date1 + " to " + date2+"")
+                            .setMessage("Are you sure to set this time?\n" + date1 + " to " + date2 + "")
                             .setNegativeButton("No", null)
                             .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    Toast.makeText(getActivity(), "Successful:" + " from " + date1 + " to " + date2, Toast.LENGTH_SHORT).show();
-//                    Bundle bundle = new Bundle();
-//                    bundle.putString("library", "UNSW");
-//                    TimeFragment df = new TimeFragment();
-//                    df.setArguments(bundle);
-//                    manager.beginTransaction().replace(R.id.nav_host_fragment, df).addToBackStack(null).commit();
+                                    Bundle bundle = new Bundle();
+                                    String library = getArguments().getString("library");
+                                    bundle.putString("library", library);
+                                    bundle.putString("date1", date1);
+                                    bundle.putString("date2", date2);
+                                    Seat seat = new Seat();
+                                    seat.setArguments(bundle);
+                                    manager.beginTransaction().replace(R.id.nav_host_fragment, seat).addToBackStack(null).commit();
                                 }
                             }).show();
                 } else {
@@ -217,17 +216,5 @@ public class TimeFragment extends Fragment {
                 manager.popBackStack();
             }
         });
-        map.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-
-                Intent intent = new Intent();
-                intent.setClass(getActivity(), Main2Activity.class);
-                startActivity(intent);
-            }
-        });
     }
-
-
 }
