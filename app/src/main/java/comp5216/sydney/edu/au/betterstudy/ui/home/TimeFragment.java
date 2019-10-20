@@ -38,6 +38,7 @@ public class TimeFragment extends Fragment {
     private String hour1;
     private String hour2;
     private String date;
+    private String nextDate;
     private Date today;
     private boolean isTomorrow;
     final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -91,6 +92,14 @@ public class TimeFragment extends Fragment {
             @Override
             public void onTimeChanged(TimePicker timePicker, int hour, int min) {
                 if (judgeHour(hour, hour1, String.valueOf(hour))) {
+                    if (hour == 0) {
+                        if (date == null || date.equals("dd/MM/yyyy"))
+                            nextDate = date;
+                        else
+                            nextDate = dateAddOne(date);
+                    } else {
+                        nextDate = date;
+                    }
                     hour2 = String.valueOf(hour);
                     timeDisplay();
                 } else {
@@ -104,7 +113,7 @@ public class TimeFragment extends Fragment {
     public boolean judgeHour(int hour, String hour1, String hour2) {
         if (hour1 == null || hour2 == null || hour1.equals("HH") || hour2.equals("HH")) {
             if (!isTomorrow) {
-                if (hour <= Integer.parseInt(hourFormat.format(today))&&hour!=0) {
+                if (hour <= Integer.parseInt(hourFormat.format(today)) && hour != 0) {
                     Toast.makeText(getActivity(), "Please choose future time", Toast.LENGTH_SHORT).show();
                     return false;
                 } else {
@@ -115,17 +124,17 @@ public class TimeFragment extends Fragment {
             }
         } else {
             if (!isTomorrow) {
-                if (hour <= Integer.parseInt(hourFormat.format(today))) {
+                if ((hour <= Integer.parseInt(hourFormat.format(today))) && !hour2.equals("0")) {
                     Toast.makeText(getActivity(), "Please choose future time.", Toast.LENGTH_SHORT).show();
                     return false;
                 }
-                if (Integer.parseInt(hour2) - Integer.parseInt(hour1) > 2 || Integer.parseInt(hour2) - Integer.parseInt(hour1) < 1) {
+                if ((Integer.parseInt(hour2) - Integer.parseInt(hour1) > 2 || Integer.parseInt(hour2) - Integer.parseInt(hour1) < 1) && !((hour1.equals("22") || hour1.equals("23")) && hour2.equals("0"))) {
                     Toast.makeText(getActivity(), "You can only choose 1-2 hour(s) in one time.", Toast.LENGTH_SHORT).show();
                     return false;
                 }
                 return true;
             } else {
-                if (Integer.parseInt(hour2) - Integer.parseInt(hour1) > 2 || Integer.parseInt(hour2) - Integer.parseInt(hour1) < 1) {
+                if ((Integer.parseInt(hour2) - Integer.parseInt(hour1) > 2 || Integer.parseInt(hour2) - Integer.parseInt(hour1) < 1) && !((hour1.equals("22") || hour1.equals("23")) && hour2.equals("0"))) {
                     Toast.makeText(getActivity(), "You can only choose 1-2 hour(s) in one time.", Toast.LENGTH_SHORT).show();
                     return false;
                 } else {
@@ -143,6 +152,14 @@ public class TimeFragment extends Fragment {
             public void onClick(View v) {
                 isTomorrow = false;
                 date = dateFormat.format(today);
+                if (hour2 != null) {
+                    if (hour2.equals("0")) {
+                        nextDate = dateAddOne(date);
+                    } else {
+                        nextDate = date;
+                    }
+                }
+                nextDate = date;
                 timeDisplay();
             }
         });
@@ -154,10 +171,33 @@ public class TimeFragment extends Fragment {
                 Calendar calendar = new GregorianCalendar();
                 calendar.setTime(today);
                 calendar.add(calendar.DATE, 1);
-                date = dateFormat.format(calendar.getTime());
+                date = dateAddOne(dateFormat.format(today));
+                if (hour2 != null) {
+                    if (hour2.equals("0")) {
+                        nextDate = dateAddOne(date);
+                    } else {
+                        nextDate = date;
+                    }
+                }
+                nextDate = date;
                 timeDisplay();
             }
         });
+    }
+
+    public String dateAddOne(String date) {
+        if (date == null) {
+            return null;
+        } else {
+            Calendar calendar = new GregorianCalendar();
+            try {
+                calendar.setTime(dateFormat.parse(date));
+                calendar.add(calendar.DATE, 1);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            return dateFormat.format(calendar.getTime());
+        }
     }
 
     public void timeDisplay() {
@@ -170,7 +210,10 @@ public class TimeFragment extends Fragment {
         if (date == null) {
             date = "dd/MM/yyyy";
         }
-        timeText.setText(date + " " + hour1 + ":00" + " - " + date + " " + hour2 + ":00");
+        if (nextDate == null) {
+            nextDate = "dd/MM/yyyy";
+        }
+        timeText.setText(date + " " + hour1 + ":00" + " - " + nextDate + " " + hour2 + ":00");
     }
 
     public void setButtonListener() {
