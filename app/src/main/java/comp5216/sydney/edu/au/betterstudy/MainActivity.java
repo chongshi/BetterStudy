@@ -8,6 +8,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -21,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         userId = intent.getStringExtra("ID");
+        Toast.makeText(MainActivity.this, "id: " + userId, Toast.LENGTH_SHORT).show();
         BottomNavigationView navView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.

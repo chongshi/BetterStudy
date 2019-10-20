@@ -16,10 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -27,6 +24,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import io.opencensus.internal.Utils;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -38,6 +37,7 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseFirestore mFirestore;
     String userPwd;
     Map<String, Object> list;
+    Boolean isLogin;
     ArrayList<String> listString, listPwd, listEmail;
 
     @Override
@@ -45,13 +45,22 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        mFirestore = FirebaseFirestore.getInstance();
-        list = new HashMap<>();
-        listString = new ArrayList<>();
-        listPwd = new ArrayList<>();
-        listEmail = new ArrayList<>();
-        getAllData();
-        init();
+        if (getLoginStatus()) {
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            intent.putExtra("ID", getLoginData());
+            //跳转到主界面，登录成功的状态传递到 MainActivity 中
+            startActivity(intent);
+        } else {
+            mFirestore = FirebaseFirestore.getInstance();
+            list = new HashMap<>();
+            listString = new ArrayList<>();
+            listPwd = new ArrayList<>();
+            listEmail = new ArrayList<>();
+            getAllData();
+            init();
+        }
+
+
     }
 
     public void getAllData() {
@@ -145,7 +154,7 @@ public class LoginActivity extends AppCompatActivity {
                     //一致登录成功
                     Toast.makeText(LoginActivity.this, "login successful", Toast.LENGTH_SHORT).show();
                     //保存登录状态，在界面保存登录的用户名 定义个方法 saveLoginStatus boolean 状态 , userName 用户名;
-                    //saveLoginStatus(true, userName);
+                    setLoginStatus(true, getUserID);
                     //登录成功后关闭此页面进入主页
                     //Intent data=new Intent();
                     //datad.putExtra( ); name , value ;
@@ -188,13 +197,60 @@ public class LoginActivity extends AppCompatActivity {
      * 从firestone中根据用户名读取userId
      */
     private String readUserId(String userName) {
-        for (int i = 0; i < listString.size(); i++) {
-            if (userName.equalsIgnoreCase(listString.get(i))) {
+        for (int i = 0; i < listEmail.size(); i++) {
+            if (userName.equalsIgnoreCase(listEmail.get(i))) {
                 userID = listString.get(i);
                 break;
             }
         }
         return userID;
+    }
+
+    /**
+     * 保存登录状态和登录用户名到SharedPreferences中
+     */
+    private void setLoginStatus(boolean status, String userID) {
+
+        //saveLoginStatus(true, userName);
+        //loginInfo表示文件名  SharedPreferences sp=getSharedPreferences("loginInfo", MODE_PRIVATE);
+        SharedPreferences sp = getSharedPreferences("loginInfo", MODE_PRIVATE);
+        //获取编辑器
+        SharedPreferences.Editor editor = sp.edit();
+        //存入boolean类型的登录状态
+        editor.putBoolean("isLogin", status);
+        //存入登录状态时的用户名
+        editor.putString("loginUserId", userID);
+        //提交修改
+        editor.apply();
+    }
+
+    /**
+     * 判断登录状态和登录用户名是否存在SharedPreferences中
+     *
+     * @return
+     */
+    private boolean getLoginStatus() {
+        SharedPreferences sp = getSharedPreferences("loginInfo", MODE_PRIVATE);
+        return sp.getBoolean("isLogin", false);
+    }
+
+    private String getLoginData() {
+        SharedPreferences sp = getSharedPreferences("loginInfo", MODE_PRIVATE);
+        return sp.getString("loginUserId", null);
+    }
+
+    /**
+     * 移除登录状态和登录用户名
+     *
+     * @return
+     */
+    private void removeLoginStatu(boolean status, String userID) {
+        //setLoginStatus(false,userID);
+        SharedPreferences sp = getSharedPreferences("loginInfo", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putBoolean("isLogin", status);
+        editor.remove(userID);
+        editor.apply();
     }
 
 }
