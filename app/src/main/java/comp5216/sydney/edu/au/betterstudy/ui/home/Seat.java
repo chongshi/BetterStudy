@@ -1,5 +1,6 @@
 package comp5216.sydney.edu.au.betterstudy.ui.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,15 +11,18 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import java.util.ArrayList;
 import java.util.Date;
 
+import comp5216.sydney.edu.au.betterstudy.MainActivity;
 import comp5216.sydney.edu.au.betterstudy.R;
 
 public class Seat extends Fragment {
 
 
+    private FragmentManager manager;
     String[] S;
     String[] F;
 
@@ -29,7 +33,7 @@ public class Seat extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        String library = getArguments().getString("library");
+        final String library = getArguments().getString("library");
         String date1 = getArguments().getString("date1");
         String date2 = getArguments().getString("date2");
         S = getArguments().getString("S").split(":");
@@ -45,9 +49,20 @@ public class Seat extends Fragment {
             @Override
             public void onClick(View v) {
 
-                seatTableView.saveseat(S[0], S[1], F[1]);
+                seatTableView.saveseat(S[0], S[1], F[1], library);
             }
         });
+
+        Button button1 = root.findViewById(R.id.buttonback);
+        button1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), MainActivity.class);
+                startActivity(intent);
+            }
+        });
+
+
 
 
         final int ft = Integer.parseInt(S[1]);
@@ -66,7 +81,7 @@ public class Seat extends Fragment {
             public boolean isSold(int row, int column) {
 
                 for (int i = 0; i < seats.size(); i++) {
-                    if (seats.get(i).getDa().equals(S[0]) && row == seats.get(i).getI() && column == seats.get(i).getJ()) {
+                    if (seats.get(i).getLibrary().equals(library) && seats.get(i).getDa().equals(S[0]) && row == seats.get(i).getI() && column == seats.get(i).getJ()) {
 
                         if ((Integer.parseInt(seats.get(i).getFt()) > ft && Integer.parseInt(seats.get(i).getFt()) <= tt) || (Integer.parseInt(seats.get(i).getSt()) >= ft && Integer.parseInt(seats.get(i).getSt()) < tt))
 

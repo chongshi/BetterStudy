@@ -1183,9 +1183,9 @@ public class SeatTable extends View {
         return result;
     }
 
-    public void saveseat(String d, String s, String f) {
+    public void saveseat(String d, String s, String f, String lib) {
 
-        comp5216.sydney.edu.au.betterstudy.model.Seat seat = new comp5216.sydney.edu.au.betterstudy.model.Seat(I, J, d, s, f);
+        comp5216.sydney.edu.au.betterstudy.model.Seat seat = new comp5216.sydney.edu.au.betterstudy.model.Seat(I, J, d, s, f, lib);
         Seat.seats.add(seat);
         System.out.println(I + J);
 

@@ -8,20 +8,24 @@ public class Seat {
 
 
     int I, J, va;
-    String st, ft, da;
+    String st, ft, da, library;
     Date sdate, fdate;
 
     public Seat() {
 
     }
 
-    public Seat(int i, int j, String d, String s, String f) {
+    public Seat(int i, int j, String d, String s, String f, String lib) {
         I = i;
         J = j;
         da = d;
         st = s;
         ft = f;
+        library = lib;
+    }
 
+    public String getLibrary() {
+        return library;
     }
 
     public String getDa() {
