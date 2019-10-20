@@ -8,12 +8,16 @@ import androidx.navigation.ui.NavigationUI;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import comp5216.sydney.edu.au.betterstudy.ui.notifications.NotificationsFragment;
+
 public class MainActivity extends AppCompatActivity {
 
+    private NotificationsFragment notificationsFragment;
     String userId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = getIntent();
         userId = intent.getStringExtra("ID");
         Toast.makeText(MainActivity.this, "id: " + userId, Toast.LENGTH_SHORT).show();
+        //passMessage();
         BottomNavigationView navView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
@@ -32,5 +37,14 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
+    }
+
+    //to pass message this method doesn't work
+    public void passMessage(){
+        notificationsFragment = new NotificationsFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("ID", userId);
+        Log.i("mainactivity", userId);
+        notificationsFragment.setArguments(bundle);
     }
 }

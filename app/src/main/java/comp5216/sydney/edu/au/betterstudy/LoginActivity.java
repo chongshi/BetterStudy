@@ -166,6 +166,10 @@ public class LoginActivity extends AppCompatActivity {
                     LoginActivity.this.finish();
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     intent.putExtra("ID", getUserID);
+                    if (getUserID == null){
+                        Log.i("loginactivity","ID是空的");
+                    }
+                    Log.i("loginactivity",getUserID);
                     //跳转到主界面，登录成功的状态传递到 MainActivity 中
                     startActivity(intent);
 
