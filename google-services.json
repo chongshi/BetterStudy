@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "541482989818",
+    "firebase_url": "https://betterstudy-358fc.firebaseio.com",
+    "project_id": "betterstudy-358fc",
+    "storage_bucket": "betterstudy-358fc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:541482989818:android:238eb10a7b9b6391fbf143",
+        "android_client_info": {
+          "package_name": "comp5216.sydney.edu.au.betterstudy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "541482989818-gcu11o1al15opbj6pf578ajchqsau2te.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_VOkDvH0vZYkSH1eRrbGQSVbKxvZgaQY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "541482989818-gcu11o1al15opbj6pf578ajchqsau2te.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
