@@ -4,7 +4,6 @@ import android.animation.Animator;
 import android.animation.TypeEvaluator;
 import android.animation.ValueAnimator;
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -41,154 +40,125 @@ import comp5216.sydney.edu.au.betterstudy.R;
 
 public class SeatTable extends View {
 
+    /**
+     * 座位已售
+     */
+    private static final int SEAT_TYPE_SOLD = 1;
+    /**
+     * 座位已经选中
+     */
+    private static final int SEAT_TYPE_SELECTED = 2;
+    /**
+     * 座位可选
+     */
+    private static final int SEAT_TYPE_AVAILABLE = 3;
+    /**
+     * 座位不可用
+     */
+    private static final int SEAT_TYPE_NOT_AVAILABLE = 4;
     private final boolean DBG = false;
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
     Paint paint = new Paint();
     Paint overviewPaint = new Paint();
     Paint lineNumberPaint;
     float lineNumberTxtHeight;
-
-    /**
-     * 设置行号 默认显示 1,2,3....数字
-     *
-     * @param lineNumbers
-     */
-    public void setLineNumbers(ArrayList<String> lineNumbers) {
-        this.lineNumbers = lineNumbers;
-        invalidate();
-    }
-
     /**
      * 用来保存所有行号
      */
     ArrayList<String> lineNumbers = new ArrayList<>();
-
     Paint.FontMetrics lineNumberPaintFontMetrics;
     Matrix matrix = new Matrix();
-
     /**
      * 座位水平间距
      */
     int spacing;
-
     /**
      * 座位垂直间距
      */
     int verSpacing;
-
     /**
      * 行号宽度
      */
     int numberWidth;
-
     /**
      * 行数
      */
     int row;
-
     /**
      * 列数
      */
     int column;
-
     /**
      * 可选时座位的图片
      */
     Bitmap seatBitmap;
-
     /**
      * 选中时座位的图片
      */
     Bitmap checkedSeatBitmap;
-
     /**
      * 座位已经售出时的图片
      */
     Bitmap seatSoldBitmap;
-
     Bitmap overviewBitmap;
-
     int lastX;
     int lastY;
-
     /**
      * 整个座位图的宽度
      */
     int seatBitmapWidth;
-
     /**
      * 整个座位图的高度
      */
     int seatBitmapHeight;
-
     /**
      * 标识是否需要绘制座位图
      */
     boolean isNeedDrawSeatBitmap = true;
-
     /**
      * 概览图白色方块高度
      */
     float rectHeight;
-
     /**
      * 概览图白色方块的宽度
      */
     float rectWidth;
-
     /**
      * 概览图上方块的水平间距
      */
     float overviewSpacing;
-
     /**
      * 概览图上方块的垂直间距
      */
     float overviewVerSpacing;
-
     /**
      * 概览图的比例
      */
     float overviewScale = 4.8f;
-
     /**
      * 荧幕高度
      */
     float screenHeight;
-
     /**
      * 荧幕默认宽度与座位图的比例
      */
     float screenWidthScale = 0.5f;
-
     /**
      * 荧幕最小宽度
      */
     int defaultScreenWidth;
-
     /**
      * 标识是否正在缩放
      */
     boolean isScaling;
     float scaleX, scaleY;
-
     /**
      * 是否是第一次缩放
      */
     boolean firstScale = true;
-
     /**
      * 最多可以选择的座位数量
      */
     int maxSelected = Integer.MAX_VALUE;
-
-    private SeatChecker seatChecker;
-
-    /**
-     * 荧幕名称
-     */
-    private String screenName = "";
-
     /**
      * 整个概览图的宽度
      */
@@ -225,64 +195,142 @@ public class SeatTable extends View {
     int seatAvailableResID;
 
     boolean isOnClick;
-
-    /**
-     * 座位已售
-     */
-    private static final int SEAT_TYPE_SOLD = 1;
-
-    /**
-     * 座位已经选中
-     */
-    private static final int SEAT_TYPE_SELECTED = 2;
-    private int I, J;
-
-    /**
-     * 座位可选
-     */
-    private static final int SEAT_TYPE_AVAILABLE = 3;
-
-    /**
-     * 座位不可用
-     */
-    private static final int SEAT_TYPE_NOT_AVAILABLE = 4;
-
-    private int downX, downY;
-    private boolean pointer;
-
     /**
      * 顶部高度,可选,已选,已售区域的高度
      */
     float headHeight;
-
     Paint pathPaint;
     RectF rectF;
-
     /**
      * 头部下面横线的高度
      */
     int borderHeight = 1;
     Paint redBorderPaint;
+    float xScale1 = 1;
+    float yScale1 = 1;
+    Matrix tempMatrix = new Matrix();
+    int bacColor = Color.parseColor("#7e000000");
+    Handler handler = new Handler();
+    ArrayList<Integer> selects = new ArrayList<>();
+    float[] m = new float[9];
+    ScaleGestureDetector scaleGestureDetector = new ScaleGestureDetector(getContext(), new ScaleGestureDetector.OnScaleGestureListener() {
+        @Override
+        public boolean onScale(ScaleGestureDetector detector) {
+            isScaling = true;
+            float scaleFactor = detector.getScaleFactor();
+            if (getMatrixScaleY() * scaleFactor > 3) {
+                scaleFactor = 3 / getMatrixScaleY();
+            }
+            if (firstScale) {
+                scaleX = detector.getCurrentSpanX();
+                scaleY = detector.getCurrentSpanY();
+                firstScale = false;
+            }
 
+            if (getMatrixScaleY() * scaleFactor < 0.5) {
+                scaleFactor = 0.5f / getMatrixScaleY();
+            }
+            matrix.postScale(scaleFactor, scaleFactor, scaleX, scaleY);
+            invalidate();
+            return true;
+        }
+
+        @Override
+        public boolean onScaleBegin(ScaleGestureDetector detector) {
+            return true;
+        }
+
+        @Override
+        public void onScaleEnd(ScaleGestureDetector detector) {
+            isScaling = false;
+            firstScale = true;
+        }
+    });
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private SeatChecker seatChecker;
+    /**
+     * 荧幕名称
+     */
+    private String screenName = "";
+    private int I, J;
+    private int downX, downY;
+    private boolean pointer;
     /**
      * 默认的座位图宽度,如果使用的自己的座位图片比这个尺寸大或者小,会缩放到这个大小
      */
     private float defaultImgW = 40;
-
     /**
      * 默认的座位图高度
      */
     private float defaultImgH = 34;
-
     /**
      * 座位图片的宽度
      */
     private int seatWidth;
-
     /**
      * 座位图片的高度
      */
     private int seatHeight;
+    GestureDetector gestureDetector = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener() {
+        @Override
+        public boolean onSingleTapConfirmed(MotionEvent e) {
+            isOnClick = true;
+            int x = (int) e.getX();
+            int y = (int) e.getY();
+            for (int i = 0; i < row; i++) {
+                for (int j = 0; j < column; j++) {
+                    int tempX = (int) ((j * seatWidth + (j + 1) * spacing) * getMatrixScaleX() + getTranslateX());
+                    int maxTemX = (int) (tempX + seatWidth * getMatrixScaleX());
+                    int tempY = (int) ((i * seatHeight + i * verSpacing) * getMatrixScaleY() + getTranslateY());
+                    int maxTempY = (int) (tempY + seatHeight * getMatrixScaleY());
+                    if (seatChecker != null && seatChecker.isValidSeat(i, j) && !seatChecker.isSold(i, j)) {
+                        if (x >= tempX && x <= maxTemX && y >= tempY && y <= maxTempY) {
+                            int id = getID(i, j);
+
+
+                            int index = isHave(id);
+                            if (index >= 0) {
+                                remove(index);
+                                if (seatChecker != null) {
+                                    seatChecker.unCheck(i, j);
+                                }
+                            } else {
+                                if (selects.size() >= maxSelected) {
+                                    Toast.makeText(getContext(), "Choose up to" + maxSelected, Toast.LENGTH_SHORT).show();
+                                    return super.onSingleTapConfirmed(e);
+                                } else {
+                                    addChooseSeat(i, j);
+                                    if (seatChecker != null) {
+                                        seatChecker.checked(i, j);
+                                    }
+                                }
+                            }
+                            isNeedDrawSeatBitmap = true;
+                            isDrawOverviewBitmap = true;
+                            float currentScaleY = getMatrixScaleY();
+
+                            if (currentScaleY < 1.7) {
+                                scaleX = x;
+                                scaleY = y;
+                                zoomAnimate(currentScaleY, 1.9f);
+                            }
+                            invalidate();
+                            break;
+                        }
+                    }
+                }
+            }
+            return super.onSingleTapConfirmed(e);
+        }
+    });
+    private Runnable hideOverviewRunnable = new Runnable() {
+        @Override
+        public void run() {
+            isDrawOverview = false;
+            invalidate();
+        }
+    };
+    private float zoom;
 
     public SeatTable(Context context) {
         super(context);
@@ -291,6 +339,21 @@ public class SeatTable extends View {
     public SeatTable(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context, attrs);
+    }
+
+    public SeatTable(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        init(context, attrs);
+    }
+
+    /**
+     * 设置行号 默认显示 1,2,3....数字
+     *
+     * @param lineNumbers
+     */
+    public void setLineNumbers(ArrayList<String> lineNumbers) {
+        this.lineNumbers = lineNumbers;
+        invalidate();
     }
 
     private void init(Context context, AttributeSet attrs) {
@@ -306,19 +369,10 @@ public class SeatTable extends View {
 
     }
 
-    public SeatTable(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        init(context, attrs);
-    }
-
-
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
-
-    float xScale1 = 1;
-    float yScale1 = 1;
 
     private void init() {
         spacing = (int) dip2Px(5);
@@ -470,14 +524,6 @@ public class SeatTable extends View {
         return true;
     }
 
-    private Runnable hideOverviewRunnable = new Runnable() {
-        @Override
-        public void run() {
-            isDrawOverview = false;
-            invalidate();
-        }
-    };
-
     Bitmap drawHeadInfo() {
         String txt = "已售";
         float txtY = getBaseLine(headPaint, 0, headHeight);
@@ -545,8 +591,6 @@ public class SeatTable extends View {
         pathPaint.setTextSize(40 * getMatrixScaleX());
         canvas.drawText(screenName, centerX - pathPaint.measureText(screenName) / 2, getBaseLine(pathPaint, startY, startY + screenHeight * getMatrixScaleY()), pathPaint);
     }
-
-    Matrix tempMatrix = new Matrix();
 
     void drawSeat(Canvas canvas) {
         zoom = getMatrixScaleX();
@@ -670,8 +714,6 @@ public class SeatTable extends View {
             Log.d("drawTest:", "top:" + top);
         }
     }
-
-    int bacColor = Color.parseColor("#7e000000");
 
     /**
      * 绘制行号
@@ -857,9 +899,6 @@ public class SeatTable extends View {
         }
     }
 
-    Handler handler = new Handler();
-    ArrayList<Integer> selects = new ArrayList<>();
-
     public ArrayList<String> getSelectedSeat() {
         ArrayList<String> results = new ArrayList<>();
         for (int i = 0; i < this.row; i++) {
@@ -879,8 +918,6 @@ public class SeatTable extends View {
     private void remove(int index) {
         selects.remove(index);
     }
-
-    float[] m = new float[9];
 
     private float getTranslateX() {
         matrix.getValues(m);
@@ -931,8 +968,6 @@ public class SeatTable extends View {
         valueAnimator.start();
     }
 
-    private float zoom;
-
     private void zoom(float zoom) {
         float z = zoom / getMatrixScaleX();
         matrix.postScale(z, z, scaleX, scaleY);
@@ -946,150 +981,12 @@ public class SeatTable extends View {
         invalidate();
     }
 
-    class MoveAnimation implements ValueAnimator.AnimatorUpdateListener {
-
-        @Override
-        public void onAnimationUpdate(ValueAnimator animation) {
-            Point p = (Point) animation.getAnimatedValue();
-
-            move(p);
-        }
-    }
-
-    class MoveEvaluator implements TypeEvaluator {
-
-        @Override
-        public Object evaluate(float fraction, Object startValue, Object endValue) {
-            Point startPoint = (Point) startValue;
-            Point endPoint = (Point) endValue;
-            int x = (int) (startPoint.x + fraction * (endPoint.x - startPoint.x));
-            int y = (int) (startPoint.y + fraction * (endPoint.y - startPoint.y));
-            return new Point(x, y);
-        }
-    }
-
-    class ZoomAnimation implements ValueAnimator.AnimatorUpdateListener, Animator.AnimatorListener {
-
-        @Override
-        public void onAnimationUpdate(ValueAnimator animation) {
-            zoom = (Float) animation.getAnimatedValue();
-            zoom(zoom);
-
-            if (DBG) {
-                Log.d("zoomTest", "zoom:" + zoom);
-            }
-        }
-
-        @Override
-        public void onAnimationCancel(Animator animation) {
-        }
-
-        @Override
-        public void onAnimationEnd(Animator animation) {
-        }
-
-        @Override
-        public void onAnimationRepeat(Animator animation) {
-        }
-
-        @Override
-        public void onAnimationStart(Animator animation) {
-        }
-
-    }
-
     public void setData(int row, int column) {
         this.row = row;
         this.column = column;
         init();
         invalidate();
     }
-
-    ScaleGestureDetector scaleGestureDetector = new ScaleGestureDetector(getContext(), new ScaleGestureDetector.OnScaleGestureListener() {
-        @Override
-        public boolean onScale(ScaleGestureDetector detector) {
-            isScaling = true;
-            float scaleFactor = detector.getScaleFactor();
-            if (getMatrixScaleY() * scaleFactor > 3) {
-                scaleFactor = 3 / getMatrixScaleY();
-            }
-            if (firstScale) {
-                scaleX = detector.getCurrentSpanX();
-                scaleY = detector.getCurrentSpanY();
-                firstScale = false;
-            }
-
-            if (getMatrixScaleY() * scaleFactor < 0.5) {
-                scaleFactor = 0.5f / getMatrixScaleY();
-            }
-            matrix.postScale(scaleFactor, scaleFactor, scaleX, scaleY);
-            invalidate();
-            return true;
-        }
-
-        @Override
-        public boolean onScaleBegin(ScaleGestureDetector detector) {
-            return true;
-        }
-
-        @Override
-        public void onScaleEnd(ScaleGestureDetector detector) {
-            isScaling = false;
-            firstScale = true;
-        }
-    });
-    GestureDetector gestureDetector = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener() {
-        @Override
-        public boolean onSingleTapConfirmed(MotionEvent e) {
-            isOnClick = true;
-            int x = (int) e.getX();
-            int y = (int) e.getY();
-            for (int i = 0; i < row; i++) {
-                for (int j = 0; j < column; j++) {
-                    int tempX = (int) ((j * seatWidth + (j + 1) * spacing) * getMatrixScaleX() + getTranslateX());
-                    int maxTemX = (int) (tempX + seatWidth * getMatrixScaleX());
-                    int tempY = (int) ((i * seatHeight + i * verSpacing) * getMatrixScaleY() + getTranslateY());
-                    int maxTempY = (int) (tempY + seatHeight * getMatrixScaleY());
-                    if (seatChecker != null && seatChecker.isValidSeat(i, j) && !seatChecker.isSold(i, j)) {
-                        if (x >= tempX && x <= maxTemX && y >= tempY && y <= maxTempY) {
-                            int id = getID(i, j);
-
-
-                            int index = isHave(id);
-                            if (index >= 0) {
-                                remove(index);
-                                if (seatChecker != null) {
-                                    seatChecker.unCheck(i, j);
-                                }
-                            } else {
-                                if (selects.size() >= maxSelected) {
-                                    Toast.makeText(getContext(), "Choose up to" + maxSelected, Toast.LENGTH_SHORT).show();
-                                    return super.onSingleTapConfirmed(e);
-                                } else {
-                                    addChooseSeat(i, j);
-                                    if (seatChecker != null) {
-                                        seatChecker.checked(i, j);
-                                    }
-                                }
-                            }
-                            isNeedDrawSeatBitmap = true;
-                            isDrawOverviewBitmap = true;
-                            float currentScaleY = getMatrixScaleY();
-
-                            if (currentScaleY < 1.7) {
-                                scaleX = x;
-                                scaleY = y;
-                                zoomAnimate(currentScaleY, 1.9f);
-                            }
-                            invalidate();
-                            break;
-                        }
-                    }
-                }
-            }
-            return super.onSingleTapConfirmed(e);
-        }
-    });
 
     private void addChooseSeat(int row, int column) {
         int id = getID(row, column);
@@ -1101,39 +998,6 @@ public class SeatTable extends View {
             }
         }
         selects.add(id);
-    }
-
-    public interface SeatChecker {
-        /**
-         * 是否可用座位
-         *
-         * @param row
-         * @param column
-         * @return
-         */
-        boolean isValidSeat(int row, int column);
-
-        /**
-         * 是否已售
-         *
-         * @param row
-         * @param column
-         * @return
-         */
-        boolean isSold(int row, int column);
-
-        void checked(int row, int column);
-
-        void unCheck(int row, int column);
-
-        /**
-         * 获取选中后座位上显示的文字
-         *
-         * @param row
-         * @param column
-         * @return 返回2个元素的数组, 第一个元素是第一行的文字, 第二个元素是第二行文字, 如果只返回一个元素则会绘制到座位图的中间位置
-         */
-        String[] checkedSeatTxt(int row, int column);
     }
 
     public void setScreenName(String screenName) {
@@ -1188,8 +1052,8 @@ public class SeatTable extends View {
         return result;
     }
 
-    public void saveseat(String id,String d, String s, String f, String lib) {
-        comp5216.sydney.edu.au.betterstudy.model.Seat seat = new comp5216.sydney.edu.au.betterstudy.model.Seat(id,I, J, d, s, f, lib);
+    public void saveseat(String id, String d, String s, String f, String lib) {
+        comp5216.sydney.edu.au.betterstudy.model.Seat seat = new comp5216.sydney.edu.au.betterstudy.model.Seat(id, I, J, d, s, f, lib);
         //     Seat.seats.add(seat);
 
         db.collection("Seat").add(seat).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
@@ -1205,6 +1069,91 @@ public class SeatTable extends View {
                         Log.w("", "Error adding document", e);
                     }
                 });
+
+    }
+
+    public interface SeatChecker {
+        /**
+         * 是否可用座位
+         *
+         * @param row
+         * @param column
+         * @return
+         */
+        boolean isValidSeat(int row, int column);
+
+        /**
+         * 是否已售
+         *
+         * @param row
+         * @param column
+         * @return
+         */
+        boolean isSold(int row, int column);
+
+        void checked(int row, int column);
+
+        void unCheck(int row, int column);
+
+        /**
+         * 获取选中后座位上显示的文字
+         *
+         * @param row
+         * @param column
+         * @return 返回2个元素的数组, 第一个元素是第一行的文字, 第二个元素是第二行文字, 如果只返回一个元素则会绘制到座位图的中间位置
+         */
+        String[] checkedSeatTxt(int row, int column);
+    }
+
+    class MoveAnimation implements ValueAnimator.AnimatorUpdateListener {
+
+        @Override
+        public void onAnimationUpdate(ValueAnimator animation) {
+            Point p = (Point) animation.getAnimatedValue();
+
+            move(p);
+        }
+    }
+
+    class MoveEvaluator implements TypeEvaluator {
+
+        @Override
+        public Object evaluate(float fraction, Object startValue, Object endValue) {
+            Point startPoint = (Point) startValue;
+            Point endPoint = (Point) endValue;
+            int x = (int) (startPoint.x + fraction * (endPoint.x - startPoint.x));
+            int y = (int) (startPoint.y + fraction * (endPoint.y - startPoint.y));
+            return new Point(x, y);
+        }
+    }
+
+    class ZoomAnimation implements ValueAnimator.AnimatorUpdateListener, Animator.AnimatorListener {
+
+        @Override
+        public void onAnimationUpdate(ValueAnimator animation) {
+            zoom = (Float) animation.getAnimatedValue();
+            zoom(zoom);
+
+            if (DBG) {
+                Log.d("zoomTest", "zoom:" + zoom);
+            }
+        }
+
+        @Override
+        public void onAnimationCancel(Animator animation) {
+        }
+
+        @Override
+        public void onAnimationEnd(Animator animation) {
+        }
+
+        @Override
+        public void onAnimationRepeat(Animator animation) {
+        }
+
+        @Override
+        public void onAnimationStart(Animator animation) {
+        }
 
     }
 
