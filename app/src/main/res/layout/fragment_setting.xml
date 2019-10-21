@@ -29,8 +29,16 @@
         android:gravity="center"
         android:text="Better Study Version 1.0"
         android:textSize="15sp"
-        android:layout_above="@id/replacebottomnaviplace"
+        android:layout_above="@id/logout"
         />
+
+    <Button
+        android:id="@+id/logout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="LOG OUT"
+        android:textColor="#FFFF0000"
+        android:layout_above="@id/replacebottomnaviplace"/>
 
     <!--<TextView
         android:id="@+id/setting"

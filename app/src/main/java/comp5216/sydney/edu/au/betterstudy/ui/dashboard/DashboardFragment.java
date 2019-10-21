@@ -18,13 +18,16 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import comp5216.sydney.edu.au.betterstudy.R;
 
 public class DashboardFragment extends Fragment {
 
     private DashboardViewModel dashboardViewModel;
+    private String userIdFromLogin;
 
     Button button;
     TextView noIncomplete;
@@ -61,6 +64,8 @@ public class DashboardFragment extends Fragment {
         incompleteItems = new ArrayList<String>();
         historyDates = new ArrayList<String>();
         historyItems = new ArrayList<String>();
+
+        userIdFromLogin = getActivity().getIntent().getStringExtra("ID");
 
         //there should be a method to read database
 
@@ -114,6 +119,38 @@ public class DashboardFragment extends Fragment {
                 builder.create().show();
             }
         });
+    }
+    // identify whether the date is before today
+    public boolean isDateBeforeToday(Date date){
+        Date today = new Date();
+        if (date.before(today)){
+            return true;
+        }else {
+            return false;
+        }
+    }
+
+    //identify whether the date is after today
+    public boolean isDateAfterToday(Date date){
+        Date today = new Date();
+        if(date.after(today)){
+            return true;
+        }else {
+            return false;
+        }
+    }
+
+    //identify whether the time is before current time
+    public boolean isTimeBeforeCurrentTime(String finishTime){
+        SimpleDateFormat sdf =   new SimpleDateFormat( "HH" );
+        String currentTime = sdf.format(new Date());
+        int current = Integer.parseInt(currentTime);
+        int finish = Integer.parseInt(finishTime);
+        if (finish < current){
+            return true;
+        }else {
+            return false;
+        }
     }
 
 }
