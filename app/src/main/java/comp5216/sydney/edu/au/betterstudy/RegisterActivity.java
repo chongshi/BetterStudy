@@ -1,7 +1,9 @@
 package comp5216.sydney.edu.au.betterstudy;
 
+import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -53,8 +55,20 @@ public class RegisterActivity extends AppCompatActivity {
                 "userId");
         rand = new Random();
         //设置此界面为竖屏
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        // setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         init();
+    }
+
+    public boolean isNetworkConnected() {
+
+        ConnectivityManager mConnectivityManager = (ConnectivityManager) this
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
+        if (mNetworkInfo != null) {
+            return mNetworkInfo.isAvailable();
+        }
+
+        return false;
     }
 
     public void addData(String userEmail, String password) {
@@ -62,13 +76,13 @@ public class RegisterActivity extends AppCompatActivity {
         Map<String, Object> user = new HashMap<>();
 
         do {
-            Id = rand.nextInt(10000);
+            Id = rand.nextInt(90000 - 100000);
             uId = String.valueOf(Id);
         }
         while (isExistUserId(uId));
 
         user.put("email", userEmail);
-        user.put("userId", uId);
+        user.put("userId", "540" + uId);
         user.put("userPassWord", password);
 
         // Add a new document with a generated ID
@@ -130,24 +144,20 @@ public class RegisterActivity extends AppCompatActivity {
                 } else if (isExistUserName(userName)) {
                     Toast.makeText(RegisterActivity.this, "username is existing", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(RegisterActivity.this, "register successful", Toast.LENGTH_SHORT).show();
-                    //把账号、密码和账号标识保存到sp里面
+
                     /**
                      * 保存账号和密码到firestone中
                      */
-                    String md5Psw = MD5Utils.md5(psw);
-                    addData(userName, md5Psw);
-                    // saveRegisterInfo(userName,psw);
-                    //注册成功后把账号传递到LoginActivity.java中
-                    // 返回值到loginActivity显示
-                    //Intent data = new Intent();
-                    //startActivity(data);
-                    //data.putExtra("userId", uId);
-                    //setResult(RESULT_OK, data);
-                    //RESULT_OK为Activity系统常量，状态码为-1，
-                    // 表示此页面下的内容操作成功将data返回到上一页面，如果是用back返回过去的则不存在用setResult传递data值
-                    RegisterActivity.this.finish();
-                    startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+                    if (isNetworkConnected()) {
+                        String md5Psw = MD5Utils.md5(psw);
+                        addData(userName, md5Psw);
+                        RegisterActivity.this.finish();
+                        startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+                        Toast.makeText(RegisterActivity.this, "register successfully", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(RegisterActivity.this, "network error", Toast.LENGTH_SHORT).show();
+                    }
+
                 }
             }
         });
