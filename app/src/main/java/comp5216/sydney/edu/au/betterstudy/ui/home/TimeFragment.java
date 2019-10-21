@@ -17,6 +17,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -27,6 +29,8 @@ import comp5216.sydney.edu.au.betterstudy.MainActivity;
 import comp5216.sydney.edu.au.betterstudy.R;
 
 public class TimeFragment extends Fragment {
+
+
     private FragmentManager manager;
     private TimePicker timePicker1;
     private TimePicker timePicker2;
@@ -261,6 +265,7 @@ public class TimeFragment extends Fragment {
                                     bundle.putString("F", F);
                                     Seat seat = new Seat();
                                     seat.setArguments(bundle);
+
                                     manager.beginTransaction().replace(R.id.nav_host_fragment, seat).addToBackStack(null).commit();
                                 }
                             }).show();

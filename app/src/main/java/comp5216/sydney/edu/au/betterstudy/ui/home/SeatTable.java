@@ -16,9 +16,6 @@ import android.graphics.Point;
 import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.os.Handler;
-import android.os.Message;
-import android.text.Layout;
-import android.text.StaticLayout;
 import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -29,6 +26,17 @@ import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -37,7 +45,7 @@ import comp5216.sydney.edu.au.betterstudy.R;
 public class SeatTable extends View {
 
     private final boolean DBG = false;
-
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
     Paint paint = new Paint();
     Paint overviewPaint = new Paint();
     Paint lineNumberPaint;
@@ -1186,11 +1194,22 @@ public class SeatTable extends View {
     public void saveseat(String d, String s, String f, String lib) {
 
         comp5216.sydney.edu.au.betterstudy.model.Seat seat = new comp5216.sydney.edu.au.betterstudy.model.Seat(I, J, d, s, f, lib);
-        Seat.seats.add(seat);
-        System.out.println(I + J);
+        //     Seat.seats.add(seat);
+
+        db.collection("Seat").add(seat).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+            @Override
+            public void onSuccess(DocumentReference documentReference) {
+                Log.d("", "DocumentSnapshot written with ID: " + documentReference.getId());
+            }
+        })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("", "Error adding document", e);
+                    }
+                });
 
     }
-
 
 
 }

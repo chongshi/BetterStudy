@@ -2,6 +2,7 @@ package comp5216.sydney.edu.au.betterstudy.ui.home;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,20 +14,33 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import comp5216.sydney.edu.au.betterstudy.LoginActivity;
 import comp5216.sydney.edu.au.betterstudy.MainActivity;
 import comp5216.sydney.edu.au.betterstudy.R;
 
 public class Seat extends Fragment {
 
 
-    private FragmentManager manager;
+    private static FirebaseFirestore db = FirebaseFirestore.getInstance();
     String[] S;
     String[] F;
 
-    public static ArrayList<comp5216.sydney.edu.au.betterstudy.model.Seat> seats = new ArrayList<>();
+    public List<comp5216.sydney.edu.au.betterstudy.model.Seat> seats;
+
+
 
     @Nullable
     @Override
@@ -80,18 +94,23 @@ public class Seat extends Fragment {
             @Override
             public boolean isSold(int row, int column) {
 
-                for (int i = 0; i < seats.size(); i++) {
-                    if (seats.get(i).getLibrary().equals(library) && seats.get(i).getDa().equals(S[0]) && row == seats.get(i).getI() && column == seats.get(i).getJ()) {
 
-                        if ((Integer.parseInt(seats.get(i).getFt()) > ft && Integer.parseInt(seats.get(i).getFt()) <= tt) || (Integer.parseInt(seats.get(i).getSt()) >= ft && Integer.parseInt(seats.get(i).getSt()) < tt))
+                if (seats != null) {
+
+                    for (int i = 0; i < seats.size(); i++) {
+                        if (seats.get(i).getLibrary().equals(library) && seats.get(i).getDa().equals(S[0]) && row == seats.get(i).getI() && column == seats.get(i).getJ()) {
+
+                            if ((Integer.parseInt(seats.get(i).getFt()) > ft && Integer.parseInt(seats.get(i).getFt()) <= tt) || (Integer.parseInt(seats.get(i).getSt()) >= ft && Integer.parseInt(seats.get(i).getSt()) < tt))
 
 
-                            return true;
+                                return true;
+
+                        }
+
 
                     }
-
-
                 }
+
 
                 return false;
 
@@ -142,8 +161,27 @@ public class Seat extends Fragment {
 
         seatTableView.setData(10, 15);
 
+        loadlist();
         seatTableView.setScreenName(library);
         seatTableView.setMaxSelected(1);
         return root;
     }
+
+
+    public void loadlist() {
+
+        db.collection("Seat").get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        seats = queryDocumentSnapshots.toObjects(comp5216.sydney.edu.au.betterstudy.model.Seat.class);
+
+
+                    }
+                });
+
+
+    }
+
+
 }
