@@ -1,9 +1,11 @@
 package comp5216.sydney.edu.au.betterstudy;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
-//import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -25,19 +27,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.opencensus.internal.Utils;
+//import android.support.v7.app.AppCompatActivity;
+
 
 public class LoginActivity extends AppCompatActivity {
 
-    private TextView tv_back, tv_register, tv_find_psw;//返回键,显示的注册，找回密码
-    private Button btn_login;//登录按钮
+    private TextView tv_register, tv_find_psw;//返回键,显示的注册，找回密码
+    private Button btn_login, btn_getStart;//登录按钮
     private String userName, psw, spPsw, userID, getUserID;//获取的用户名，密码，加密密码
     private EditText et_user_name, et_psw;//编辑框
     private static final String TAG = "LoginActivity";
     private FirebaseFirestore mFirestore;
     String userPwd;
     Map<String, Object> list;
-    Boolean isLogin;
     ArrayList<String> listString, listPwd, listEmail;
 
     @Override
@@ -45,22 +47,45 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        if (getLoginStatus()) {
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-            intent.putExtra("ID", getLoginData());
-            //跳转到主界面，登录成功的状态传递到 MainActivity 中
-            startActivity(intent);
+
+      /*  btn_getStart = findViewById(R.id.ivButton);
+        btn_getStart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setContentView(R.layout.activity_login);
+            }
+        });*/
+        if (isNetworkConnected()) {
+            if (getLoginStatus()) {
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                intent.putExtra("ID", getLoginData());
+                //跳转到主界面，登录成功的状态传递到 MainActivity 中
+                startActivity(intent);
+            } else {
+                mFirestore = FirebaseFirestore.getInstance();
+                list = new HashMap<>();
+                listString = new ArrayList<>();
+                listPwd = new ArrayList<>();
+                listEmail = new ArrayList<>();
+                getAllData();
+                init();
+            }
         } else {
-            mFirestore = FirebaseFirestore.getInstance();
-            list = new HashMap<>();
-            listString = new ArrayList<>();
-            listPwd = new ArrayList<>();
-            listEmail = new ArrayList<>();
-            getAllData();
-            init();
+            Toast.makeText(LoginActivity.this, "network error", Toast.LENGTH_SHORT).show();
         }
 
+    }
 
+    public boolean isNetworkConnected() {
+
+        ConnectivityManager mConnectivityManager = (ConnectivityManager) this
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
+        if (mNetworkInfo != null) {
+            return mNetworkInfo.isAvailable();
+        }
+
+        return false;
     }
 
     public void getAllData() {
@@ -79,7 +104,7 @@ public class LoginActivity extends AppCompatActivity {
                                 listEmail.add(userEmail);
                                 listString.add(userID);
                                 listPwd.add(userPwd);
-                                Toast.makeText(LoginActivity.this, listString.get(0) + "22222", Toast.LENGTH_SHORT).show();
+                                // Toast.makeText(LoginActivity.this, listString.get(0) + "22222", Toast.LENGTH_SHORT).show();
                                 // Map<String, Object> list = new HashMap<>();
                                 //list.put("userId",document.getData().get("userId"));
                             }
@@ -96,7 +121,7 @@ public class LoginActivity extends AppCompatActivity {
         //从main_title_bar中获取的id
        /* tv_main_title=findViewById(R.id.tv_main_title);
         tv_main_title.setText("Login");*/
-        tv_back = findViewById(R.id.tv_back);
+        // tv_back = findViewById(R.id.tv_back);
         //从activity_login.xml中获取的
         tv_register = findViewById(R.id.tv_register);
         tv_find_psw = findViewById(R.id.tv_find_psw);
@@ -127,6 +152,8 @@ public class LoginActivity extends AppCompatActivity {
         tv_find_psw.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                removeLoginStatus(false, getLoginData());
+                Toast.makeText(LoginActivity.this, "id:" + getLoginData(), Toast.LENGTH_SHORT).show();
                 //跳转到找回密码界面（此页面暂未创建）
             }
         });
@@ -248,7 +275,7 @@ public class LoginActivity extends AppCompatActivity {
      *
      * @return
      */
-    private void removeLoginStatu(boolean status, String userID) {
+    private void removeLoginStatus(boolean status, String userID) {
         //setLoginStatus(false,userID);
         SharedPreferences sp = getSharedPreferences("loginInfo", MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
