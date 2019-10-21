@@ -5,8 +5,8 @@ import java.util.Date;
 public class Seat {
 
 
-    int I, J;
-    String st, ft, da, library, id;
+    private int I, J;
+    private String st, ft, da, library, id;
 
     public Seat() {
 
@@ -76,16 +76,6 @@ public class Seat {
 
     public void setSt(String st) {
         this.st = st;
-    }
-
-    //判断新时间是否在列表时间的2小时内
-    public boolean isDateInTheNextTwoHours(Date inputDate, Date compareDate) {
-        long gapTime = inputDate.getTime() - compareDate.getTime();
-        if (gapTime / 1000 / 60 / 60 < 2) {
-            return true;
-        } else {
-            return false;
-        }
     }
 
 
