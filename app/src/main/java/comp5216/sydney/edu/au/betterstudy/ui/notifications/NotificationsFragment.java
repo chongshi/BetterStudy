@@ -2,6 +2,8 @@ package comp5216.sydney.edu.au.betterstudy.ui.notifications;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -35,6 +38,8 @@ import java.util.Map;
 import comp5216.sydney.edu.au.betterstudy.LoginActivity;
 import comp5216.sydney.edu.au.betterstudy.R;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class NotificationsFragment extends Fragment {
 
     private FirebaseFirestore mFirestore;
@@ -47,7 +52,7 @@ public class NotificationsFragment extends Fragment {
     EditText dialogUserName;
     EditText dialogUserEmail;
     EditText dialogUserPhone;
-
+    Button logOut;
 
 
     private ListAdapter listAdapter;
@@ -73,11 +78,12 @@ public class NotificationsFragment extends Fragment {
         listView = (ListView)root.findViewById(R.id.listView);
         listAdapter = new ListAdapter(getContext(),settingElements);
         listView.setAdapter(listAdapter);
+        logOut = (Button)root.findViewById(R.id.logout);
         /*dialogUserName = (EditText)dialogView.findViewById(R.id.dialog_userName);
         dialogUserEmail = (EditText)dialogView.findViewById(R.id.dialog_userEmail);
         dialogUserPhone = (EditText)dialogView.findViewById(R.id.dialog_userPhone);*/
 
-
+        setupLogOutListener();
         setupListViewListener();
 
         return root;
@@ -341,5 +347,40 @@ public class NotificationsFragment extends Fragment {
 
     static class ViewHolder{
         TextView textView;
+    }
+
+    public void setupLogOutListener(){
+        logOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("Log Out")
+                        .setMessage("Do you want to Log Out")
+                        .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                removeLoginStatu(false, userIdFromLogin);
+                                Intent intent = new Intent(getActivity(),LoginActivity.class);
+                                startActivity(intent);
+                            }
+                        })
+                        .setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                            }
+                        });
+                builder.create().show();
+            }
+        });
+    }
+
+    private void removeLoginStatu(boolean status, String userID) {
+        //setLoginStatus(false,userID);
+        SharedPreferences sp = this.getActivity().getSharedPreferences("loginInfo", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putBoolean("isLogin", status);
+        editor.remove(userID);
+        editor.apply();
     }
 }
