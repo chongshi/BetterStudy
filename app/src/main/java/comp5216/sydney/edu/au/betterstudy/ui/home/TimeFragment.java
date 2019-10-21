@@ -49,7 +49,7 @@ public class TimeFragment extends Fragment {
     final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
     final SimpleDateFormat hourFormat = new SimpleDateFormat("HH");
     final SimpleDateFormat dataFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-    final SimpleDateFormat DHFormat = new SimpleDateFormat("dd:");
+    final SimpleDateFormat DHFormat = new SimpleDateFormat("dd/MM/yyyy:");
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {

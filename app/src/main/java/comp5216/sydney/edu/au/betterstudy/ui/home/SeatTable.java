@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.TypeEvaluator;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -30,10 +31,6 @@ import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -1191,15 +1188,15 @@ public class SeatTable extends View {
         return result;
     }
 
-    public void saveseat(String d, String s, String f, String lib) {
-
-        comp5216.sydney.edu.au.betterstudy.model.Seat seat = new comp5216.sydney.edu.au.betterstudy.model.Seat(I, J, d, s, f, lib);
+    public void saveseat(String id,String d, String s, String f, String lib) {
+        comp5216.sydney.edu.au.betterstudy.model.Seat seat = new comp5216.sydney.edu.au.betterstudy.model.Seat(id,I, J, d, s, f, lib);
         //     Seat.seats.add(seat);
 
         db.collection("Seat").add(seat).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
             public void onSuccess(DocumentReference documentReference) {
                 Log.d("", "DocumentSnapshot written with ID: " + documentReference.getId());
+
             }
         })
                 .addOnFailureListener(new OnFailureListener() {

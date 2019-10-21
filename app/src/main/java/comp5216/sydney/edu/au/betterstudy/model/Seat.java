@@ -7,19 +7,28 @@ public class Seat {
 
 
     int I, J;
-    String st, ft, da, library;
+    String st, ft, da, library,id;
 
     public Seat() {
 
     }
 
-    public Seat(int i, int j, String d, String s, String f, String lib) {
+    public Seat(String id,int i, int j, String d, String s, String f, String lib) {
+        this.id = id;
         I = i;
         J = j;
         da = d;
         st = s;
         ft = f;
         library = lib;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getLibrary() {

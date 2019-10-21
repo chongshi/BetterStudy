@@ -33,6 +33,7 @@ public class LibraryFragment extends Fragment {
         });*/
         img1 = root.findViewById(R.id.lib1);
         img2 = root.findViewById(R.id.lib2);
+        Seat.loadlist();
         manager = getFragmentManager();
         setupImageListener();
         return root;

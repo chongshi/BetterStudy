@@ -37,8 +37,8 @@ public class Seat extends Fragment {
     private static FirebaseFirestore db = FirebaseFirestore.getInstance();
     String[] S;
     String[] F;
-
-    public List<comp5216.sydney.edu.au.betterstudy.model.Seat> seats;
+    private FragmentManager manager;
+    public static List<comp5216.sydney.edu.au.betterstudy.model.Seat> seats = new ArrayList<>();
 
 
 
@@ -62,17 +62,20 @@ public class Seat extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                seatTableView.saveseat(S[0], S[1], F[1], library);
+                String userIdFromLogin = getActivity().getIntent().getStringExtra("ID");
+                seatTableView.saveseat(userIdFromLogin,S[0], S[1], F[1], library);
+                Toast.makeText(getActivity(), "Save Success", Toast.LENGTH_SHORT).show();
             }
         });
-
+        manager = getFragmentManager();
         Button button1 = root.findViewById(R.id.buttonback);
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), MainActivity.class);
-                startActivity(intent);
+
+                manager.popBackStack();
+                //Intent intent = new Intent(getActivity(), MainActivity.class);
+                //startActivity(intent);
             }
         });
 
@@ -161,14 +164,14 @@ public class Seat extends Fragment {
 
         seatTableView.setData(10, 15);
 
-        loadlist();
+    //    loadlist();
         seatTableView.setScreenName(library);
         seatTableView.setMaxSelected(1);
         return root;
     }
 
 
-    public void loadlist() {
+    public static void loadlist() {
 
         db.collection("Seat").get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -182,6 +185,9 @@ public class Seat extends Fragment {
 
 
     }
+
+
+
 
 
 }
