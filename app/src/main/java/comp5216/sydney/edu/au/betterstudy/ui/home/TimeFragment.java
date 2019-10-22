@@ -2,8 +2,8 @@ package comp5216.sydney.edu.au.betterstudy.ui.home;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,20 +17,21 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-import com.google.firebase.firestore.FirebaseFirestore;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-import comp5216.sydney.edu.au.betterstudy.MainActivity;
 import comp5216.sydney.edu.au.betterstudy.R;
 
 public class TimeFragment extends Fragment {
 
 
+    final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+    final SimpleDateFormat hourFormat = new SimpleDateFormat("HH");
+    final SimpleDateFormat dataFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+    final SimpleDateFormat DHFormat = new SimpleDateFormat("dd/MM/yyyy:");
     private FragmentManager manager;
     private TimePicker timePicker1;
     private TimePicker timePicker2;
@@ -46,16 +47,14 @@ public class TimeFragment extends Fragment {
     private String S, F;
     private Date today, sdate, fdate;
     private boolean isTomorrow;
-    final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-    final SimpleDateFormat hourFormat = new SimpleDateFormat("HH");
-    final SimpleDateFormat dataFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-    final SimpleDateFormat DHFormat = new SimpleDateFormat("dd/MM/yyyy:");
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        LibraryFragment.isUserHasIncompleteOrder();
         String library = getArguments().getString("library");
-        Toast.makeText(getActivity(), "Library: " + library, Toast.LENGTH_SHORT).show();
+        //     Toast.makeText(getActivity(), "Library: " + library, Toast.LENGTH_SHORT).show();
         View root = inflater.inflate(R.layout.fragment_time, container, false);
         manager = getFragmentManager();
         today = new Date();
@@ -163,10 +162,10 @@ public class TimeFragment extends Fragment {
                 if (hour2 != null) {
                     if (hour2.equals("0")) {
                         nextDate = dateAddOne(date);
-                    }else{
+                    } else {
                         nextDate = date;
                     }
-                }else {
+                } else {
                     nextDate = date;
                 }
                 timeDisplay();
@@ -184,10 +183,10 @@ public class TimeFragment extends Fragment {
                 if (hour2 != null) {
                     if (hour2.equals("0")) {
                         nextDate = dateAddOne(date);
-                    }else{
+                    } else {
                         nextDate = date;
                     }
-                }else {
+                } else {
                     nextDate = date;
                 }
                 date = dateFormat.format(calendar.getTime());
@@ -241,6 +240,7 @@ public class TimeFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
+
                 if (!(hour1 == null || hour2 == null || hour1.equals("HH") || hour2.equals("HH")) && date != null) {
                     String[] date = timeText.getText().toString().split(" - ");
                     try {
@@ -266,7 +266,8 @@ public class TimeFragment extends Fragment {
                                     Seat seat = new Seat();
                                     seat.setArguments(bundle);
 
-                                    if (LibraryFragment.isUserHasIncompleteOrder()) {
+                                    Log.i("a", String.valueOf(LibraryFragment.flag));
+                                    if (LibraryFragment.flag == true) {
 
                                         Toast.makeText(getActivity(), "user has incomplete", Toast.LENGTH_SHORT).show();
                                     } else {
@@ -274,7 +275,6 @@ public class TimeFragment extends Fragment {
 
                                         manager.beginTransaction().replace(R.id.nav_host_fragment, seat).addToBackStack(null).commit();
                                     }
-
 
 
                                 }
