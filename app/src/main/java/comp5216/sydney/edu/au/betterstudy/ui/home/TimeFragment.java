@@ -266,7 +266,17 @@ public class TimeFragment extends Fragment {
                                     Seat seat = new Seat();
                                     seat.setArguments(bundle);
 
-                                    manager.beginTransaction().replace(R.id.nav_host_fragment, seat).addToBackStack(null).commit();
+                                    if (LibraryFragment.isUserHasIncompleteOrder()) {
+
+                                        Toast.makeText(getActivity(), "user has incomplete", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        //         Toast.makeText(getActivity(), "user has not incomplete", Toast.LENGTH_SHORT).show();
+
+                                        manager.beginTransaction().replace(R.id.nav_host_fragment, seat).addToBackStack(null).commit();
+                                    }
+
+
+
                                 }
                             }).show();
                 } else {

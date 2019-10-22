@@ -34,9 +34,9 @@ public class LibraryFragment extends Fragment {
     private ImageView img2;
 
     //new add fields by Hill
-    private FirebaseFirestore mFirestore;
-    private String userIdFromLogin;
-    private boolean flag = false;
+    private static FirebaseFirestore mFirestore;
+    private static String userIdFromLogin;
+    private static boolean flag = false;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -98,7 +98,7 @@ public class LibraryFragment extends Fragment {
 
 
     // identify whether the date is before today by Hill
-    public boolean isDateBeforeToday(Date date){
+    public static boolean isDateBeforeToday(Date date) {
         SimpleDateFormat sdf =   new SimpleDateFormat( " dd/MM/yyyy " );
         Date today = new Date();
         String todayStr = sdf.format(today);
@@ -118,7 +118,7 @@ public class LibraryFragment extends Fragment {
     }
 
     //identify whether the date is after today by Hill
-    public boolean isDateAfterToday(Date date){
+    public static boolean isDateAfterToday(Date date) {
         Date today = new Date();
         if(date.after(today)){
             return true;
@@ -128,7 +128,7 @@ public class LibraryFragment extends Fragment {
     }
 
     //if the date is the same as today identify whether the time is before current time by Hill
-    public boolean isTimeBeforeCurrentTime(int finishTime){
+    public static boolean isTimeBeforeCurrentTime(int finishTime) {
         SimpleDateFormat sdf =   new SimpleDateFormat( "HH" );
         String currentTime = sdf.format(new Date());
         int current = Integer.parseInt(currentTime);
@@ -139,7 +139,7 @@ public class LibraryFragment extends Fragment {
         }
     }
     //judge
-    public boolean isUserHasIncompleteOrder(){
+    public static boolean isUserHasIncompleteOrder() {
         mFirestore.collection("Seat")
                 .whereEqualTo("id",userIdFromLogin)
                 .get()

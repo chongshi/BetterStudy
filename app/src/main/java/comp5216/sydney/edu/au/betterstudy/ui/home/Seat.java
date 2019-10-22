@@ -65,6 +65,8 @@ public class Seat extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
                 String userIdFromLogin = getActivity().getIntent().getStringExtra("ID");
                 seatTableView.saveseat(userIdFromLogin, S[0], S[1], F[1], library);
                 Toast.makeText(getActivity(), "Save Success", Toast.LENGTH_SHORT).show();
@@ -161,7 +163,7 @@ public class Seat extends Fragment {
 
         });
 
-        seatTableView.setData(10, 15);
+        seatTableView.setData(40, 40);
 
         //    loadlist();
         seatTableView.setScreenName(library);
