@@ -195,11 +195,14 @@ public class DashboardFragment extends Fragment {
     }
 
     //identify whether the time is before current time
-    public boolean isTimeBeforeCurrentTime(int finishTime){
+    public boolean isTimeBeforeCurrentTime(String finishTime){
         SimpleDateFormat sdf =   new SimpleDateFormat( "HH" );
         String currentTime = sdf.format(new Date());
         int current = Integer.parseInt(currentTime);
-        if (finishTime < current){
+        int finish = Integer.parseInt(finishTime);
+        Log.i("判断当天时间finish", finishTime);
+        Log.i("判断当天时间current", Integer.toString(current));
+        if (finish < current){
             return true;
         }else {
             return false;
@@ -245,7 +248,7 @@ public class DashboardFragment extends Fragment {
                                         incompleteItems.add(column);
                                         documentId = document.getId();
                                     }else {
-                                        if (isTimeBeforeCurrentTime(seat.getJ())){
+                                        if (isTimeBeforeCurrentTime(seat.getFt())){
                                             historyDates.add(dateStr);
                                             historySeatOrder.add(seat);
                                             Log.i("Dashboard", "在判断当天时间时加入");
@@ -320,6 +323,7 @@ public class DashboardFragment extends Fragment {
                 historyItems.add(historySeatOrder.get(position).getLibrary() + " library");
                 historyItems.add(Integer.toString(historySeatOrder.get(position).getI() + 1));
                 historyItems.add(Integer.toString(historySeatOrder.get(position).getJ() + 1));
+                history2.setAdapter( historyItemsAdapter);
                 Log.i("加入了",historyItems.toString());
             }
         });
