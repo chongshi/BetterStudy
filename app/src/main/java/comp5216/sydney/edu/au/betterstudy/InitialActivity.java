@@ -53,11 +53,11 @@ public class InitialActivity extends AppCompatActivity implements OnClickListene
             NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
             if (networkInfo != null && networkInfo.isAvailable()) {
                 Toast.makeText(getApplicationContext(),
-                        "有网", Toast.LENGTH_SHORT).show();
+                        "connected", Toast.LENGTH_SHORT).show();
 
             } else {
                 Toast.makeText(getApplicationContext(),
-                        "没网", Toast.LENGTH_SHORT).show();
+                        "disconnected", Toast.LENGTH_SHORT).show();
             }
         }
 
