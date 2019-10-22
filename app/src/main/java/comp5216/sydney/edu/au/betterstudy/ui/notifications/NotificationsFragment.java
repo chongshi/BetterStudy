@@ -362,6 +362,7 @@ public class NotificationsFragment extends Fragment {
                                 removeLoginStatu(false, userIdFromLogin);
                                 Intent intent = new Intent(getActivity(),LoginActivity.class);
                                 startActivity(intent);
+                                getActivity().finish();
                             }
                         })
                         .setNegativeButton("NO", new DialogInterface.OnClickListener() {
