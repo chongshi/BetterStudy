@@ -56,6 +56,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });*/
         if (isNetworkConnected()) {
+            //removeLoginStatus(false,getLoginData());
             if (getLoginStatus()) {
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 intent.putExtra("ID", getLoginData());
