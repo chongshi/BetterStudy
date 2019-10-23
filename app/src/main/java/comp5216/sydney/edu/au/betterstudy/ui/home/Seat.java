@@ -65,13 +65,18 @@ public class Seat extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
                 String userIdFromLogin = getActivity().getIntent().getStringExtra("ID");
                 seatTableView.saveseat(userIdFromLogin, S[0], S[1], F[1], library);
-                Toast.makeText(getActivity(), "Save Success", Toast.LENGTH_SHORT).show();
+                if (seatTableView.check == true) {
 
-                manager.popBackStack();
+                    Toast.makeText(getActivity(), "Save Success", Toast.LENGTH_SHORT).show();
+
+                    manager.popBackStack();
+                } else {
+                    Toast.makeText(getActivity(), "Not select", Toast.LENGTH_SHORT).show();
+                }
+
+
             }
         });
         manager = getFragmentManager();
@@ -165,7 +170,15 @@ public class Seat extends Fragment {
 
         });
 
-        seatTableView.setData(40, 40);
+        if (library.equals("UNSW")) {
+
+            seatTableView.setData(10, 15);
+
+        } else if (library.equals("Fisher")) {
+
+            seatTableView.setData(30, 35);
+
+        }
 
         //    loadlist();
         seatTableView.setScreenName(library);

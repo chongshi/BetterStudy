@@ -40,6 +40,7 @@ import comp5216.sydney.edu.au.betterstudy.R;
 
 public class SeatTable extends View {
 
+    public static boolean check;
     /**
      * 座位已售
      */
@@ -252,7 +253,7 @@ public class SeatTable extends View {
      * 荧幕名称
      */
     private String screenName = "";
-    private int I, J;
+    private int I, J, ck = 0;
     private int downX, downY;
     private boolean pointer;
     /**
@@ -630,6 +631,7 @@ public class SeatTable extends View {
                         drawText(canvas, i, j, top, left);
                         I = i;
                         J = j;
+                        ck = 1;
                         break;
                     case SEAT_TYPE_SOLD:
                         canvas.drawBitmap(seatSoldBitmap, tempMatrix, paint);
@@ -1053,22 +1055,32 @@ public class SeatTable extends View {
     }
 
     public void saveseat(String id, String d, String s, String f, String lib) {
-        comp5216.sydney.edu.au.betterstudy.model.Seat seat = new comp5216.sydney.edu.au.betterstudy.model.Seat(id, I, J, d, s, f, lib);
-        //     Seat.seats.add(seat);
 
-        db.collection("Seat").add(seat).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-            @Override
-            public void onSuccess(DocumentReference documentReference) {
-                Log.d("", "DocumentSnapshot written with ID: " + documentReference.getId());
+        if (ck == 0) {
+            check = false;
 
-            }
-        })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w("", "Error adding document", e);
-                    }
-                });
+        } else {
+            check = true;
+            ck = 0;
+            comp5216.sydney.edu.au.betterstudy.model.Seat seat = new comp5216.sydney.edu.au.betterstudy.model.Seat(id, I, J, d, s, f, lib);
+            //     Seat.seats.add(seat);
+
+            db.collection("Seat").add(seat).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                @Override
+                public void onSuccess(DocumentReference documentReference) {
+                    Log.d("", "DocumentSnapshot written with ID: " + documentReference.getId());
+
+                }
+            })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.w("", "Error adding document", e);
+                        }
+                    });
+
+        }
+
 
     }
 
