@@ -14,10 +14,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -202,7 +200,7 @@ public class DashboardFragment extends Fragment {
         int finish = Integer.parseInt(finishTime);
         Log.i("判断当天时间finish", finishTime);
         Log.i("判断当天时间current", Integer.toString(current));
-        if (finish =< current){
+        if (finish <= current) {
             return true;
         }else {
             return false;
