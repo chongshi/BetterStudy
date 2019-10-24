@@ -27,8 +27,6 @@ public class InitialActivity extends AppCompatActivity implements OnClickListene
         intentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
         networkChangeReceiver = new NetworkChangReceiver();
         registerReceiver(networkChangeReceiver, intentFilter);
-
-
         btn_getStart = findViewById(R.id.ivButton);
         btn_getStart.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,7 +52,6 @@ public class InitialActivity extends AppCompatActivity implements OnClickListene
             if (networkInfo != null && networkInfo.isAvailable()) {
                 Toast.makeText(getApplicationContext(),
                         "connected", Toast.LENGTH_SHORT).show();
-
             } else {
                 Toast.makeText(getApplicationContext(),
                         "disconnected", Toast.LENGTH_SHORT).show();
