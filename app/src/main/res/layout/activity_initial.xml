@@ -34,7 +34,7 @@
                 android:background="#1391bb"
                 android:textColor="#FFF"
                 android:text="Get Start"
-                android:onClick="buttonClick"></Button>
+                android:onClick="buttonClick" />
 
 
         </RelativeLayout>
