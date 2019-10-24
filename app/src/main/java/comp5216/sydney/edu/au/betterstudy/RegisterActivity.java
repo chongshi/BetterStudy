@@ -67,7 +67,7 @@ public class RegisterActivity extends AppCompatActivity {
         // Create userID
         Map<String, Object> user = new HashMap<>();
         do {
-            Id = rand.nextInt(90000 - 100000);
+            Id = rand.nextInt(100000);
             uId = String.valueOf(Id);
         }
         while (isExistUserId(uId));
@@ -127,7 +127,6 @@ public class RegisterActivity extends AppCompatActivity {
                         Toast.makeText(RegisterActivity.this, "register successfully", Toast.LENGTH_SHORT).show();
                         RegisterActivity.this.finish();
                         startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
-
                     } else {
                         Toast.makeText(RegisterActivity.this, "network error", Toast.LENGTH_SHORT).show();
                     }
