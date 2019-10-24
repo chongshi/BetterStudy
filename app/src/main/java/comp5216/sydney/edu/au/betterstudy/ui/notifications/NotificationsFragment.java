@@ -64,13 +64,7 @@ public class NotificationsFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
 
         View root = inflater.inflate(R.layout.fragment_setting, container, false);
-        //dialogView = View.inflate(getContext(), R.layout.setting_dialog, null);
         mFirestore = FirebaseFirestore.getInstance();
-        /*Bundle bundle = this.getArguments();
-        if (bundle == null){
-            Log.i("bundle","空的");
-        }
-        userIdFromLogin = bundle.getString("ID");*/
         userIdFromLogin = getActivity().getIntent().getStringExtra("ID");
         Log.i("userID",userIdFromLogin);
         getDataFromFirestore();
@@ -78,16 +72,13 @@ public class NotificationsFragment extends Fragment {
         listAdapter = new ListAdapter(getContext(),settingElements);
         listView.setAdapter(listAdapter);
         logOut = (Button)root.findViewById(R.id.logout);
-        /*dialogUserName = (EditText)dialogView.findViewById(R.id.dialog_userName);
-        dialogUserEmail = (EditText)dialogView.findViewById(R.id.dialog_userEmail);
-        dialogUserPhone = (EditText)dialogView.findViewById(R.id.dialog_userPhone);*/
 
         setupLogOutListener();
         setupListViewListener();
 
         return root;
     }
-
+    //get the user's information from firestore
     public void getDataFromFirestore(){
         mFirestore.collection("User")
                 .whereEqualTo("userId",userIdFromLogin)
@@ -121,6 +112,7 @@ public class NotificationsFragment extends Fragment {
                 });
     }
 
+    //set up the ListView listener
     public void setupListViewListener(){
         Log.i("setting","listener: "+ userNmae + " " + phone + " " + email);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -266,6 +258,7 @@ public class NotificationsFragment extends Fragment {
         });
     }
 
+    //set up the listAdapter
     private class ListAdapter extends BaseAdapter {
 
         private Context mContext;
@@ -348,6 +341,7 @@ public class NotificationsFragment extends Fragment {
         TextView textView;
     }
 
+    // click the button and invoke the log out method
     public void setupLogOutListener(){
         logOut.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -375,6 +369,7 @@ public class NotificationsFragment extends Fragment {
         });
     }
 
+    // Log out the user
     private void removeLoginStatu(boolean status, String userID) {
         //setLoginStatus(false,userID);
         SharedPreferences sp = this.getActivity().getSharedPreferences("loginInfo", MODE_PRIVATE);

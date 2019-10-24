@@ -14,10 +14,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -38,7 +36,6 @@ import comp5216.sydney.edu.au.betterstudy.model.Seat;
 
 public class DashboardFragment extends Fragment {
 
-    private DashboardViewModel dashboardViewModel;
     private String userIdFromLogin;
     private FirebaseFirestore mFirestore;
     private String documentId;
@@ -65,8 +62,6 @@ public class DashboardFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        dashboardViewModel =
-                ViewModelProviders.of(this).get(DashboardViewModel.class);
         View root = inflater.inflate(R.layout.fragment_dashboard, container, false);
         button = root.findViewById(R.id.cancelorder);
         noIncomplete = root.findViewById(R.id.noIncomplete);
@@ -98,31 +93,11 @@ public class DashboardFragment extends Fragment {
         historyDatesAdapter = new ArrayAdapter<String>(getContext(),android.R.layout.simple_list_item_1, historyDates);
         historyItemsAdapter = new ArrayAdapter<String>(getContext(),android.R.layout.simple_list_item_1, historyItems);
 
-       /* if (incompleteItems.isEmpty()){
-            noIncomplete.setVisibility(View.VISIBLE);
-            Log.i("incompleteItems", "没有元素在incomplete");
-        }else {
-            Log.i("incompleteItems", incompleteItems.toString());
-            noIncomplete.setVisibility(View.INVISIBLE);
-            incomplete1.setAdapter(itemsAdapter);
-            incomplete2.setAdapter(incompleteItemsAdapter);
-        }
-
-        if (historyDates.isEmpty()){
-            noHistory.setVisibility(View.VISIBLE);
-            Log.i("history", "没有元素在history");
-        }else {
-            Log.i("history", historyDates.toString());
-            noHistory.setVisibility(View.INVISIBLE);
-            historyDate.setAdapter(historyDatesAdapter);
-            history1.setAdapter(itemsAdapter);
-            history2.setAdapter( historyItemsAdapter);
-        }*/
         setUpListViewListener();
         setupButtonListener();
         return root;
     }
-
+        // cancel the incomplete order
     public void  setupButtonListener(){
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -171,7 +146,7 @@ public class DashboardFragment extends Fragment {
         String todayStr = sdf.format(today);
         try {
             Date todayZero = sdf.parse(todayStr);
-            Log.i("当前时间零点",todayZero.toString());
+            Log.i("Dashboard","the zero am of current date " + todayZero.toString());
             if (date.before(todayZero)){
                 return true;
             }else {
@@ -200,15 +175,15 @@ public class DashboardFragment extends Fragment {
         String currentTime = sdf.format(new Date());
         int current = Integer.parseInt(currentTime);
         int finish = Integer.parseInt(finishTime);
-        Log.i("判断当天时间finish", finishTime);
-        Log.i("判断当天时间current", Integer.toString(current));
+        Log.i("Dashboard", "the finish time " + finishTime);
+        Log.i("Dashboard", "the current time " + Integer.toString(current));
         if (finish < current){
             return true;
         }else {
             return false;
         }
     }
-
+    //get the user's order's information from firestore
     public void getListOrderDataFromFirestore(){
         mFirestore.collection("Seat")
                 .whereEqualTo("id",userIdFromLogin)
@@ -225,16 +200,16 @@ public class DashboardFragment extends Fragment {
                                 SimpleDateFormat format =   new SimpleDateFormat( "dd/MM/yyyy" );
                                 try {
                                     Date captureDate = format.parse(dateStr);
-                                    Log.i("数据库的时间",captureDate.toString());
+                                    Log.i("Dashboard","firestore's finish time of order" + captureDate.toString());
                                     if (isDateBeforeToday(captureDate)){
                                         historyDates.add(dateStr);
                                         historySeatOrder.add(seat);
                                         if (historyDates.isEmpty()){
-                                            Log.i("Dashboard", "空的");
+                                            Log.i("Dashboard", "empty");
                                         }else {
-                                            Log.i("Dashboard", "有元素");
+                                            Log.i("Dashboard", "has element");
                                         }
-                                        Log.i("Dashboard", "在判断日期时加入");
+                                        Log.i("Dashboard", "put in the history order when judge the date");
                                         Log.i("Dashboard", dateStr);
                                         Log.i("Dashboard", Integer.toString(seat.getI() + 1) + "  "+ Integer.toString(seat.getJ() + 1));
                                     }else if (isDateAfterToday(captureDate)){
@@ -251,7 +226,7 @@ public class DashboardFragment extends Fragment {
                                         if (isTimeBeforeCurrentTime(seat.getFt())){
                                             historyDates.add(dateStr);
                                             historySeatOrder.add(seat);
-                                            Log.i("Dashboard", "在判断当天时间时加入");
+                                            Log.i("Dashboard", "put in the history order when judge the time of today");
                                             Log.i("Dashboard", dateStr);
                                             Log.i("Dashboard", Integer.toString(seat.getI() + 1) + "  "+ Integer.toString(seat.getJ() + 1));
                                         }else {
@@ -275,7 +250,7 @@ public class DashboardFragment extends Fragment {
                                 noIncomplete.setVisibility(View.VISIBLE);
                                 incomplete1.setVisibility(View.INVISIBLE);
                                 incomplete2.setVisibility(View.INVISIBLE);
-                                Log.i("incompleteItems", "没有元素在incomplete");
+                                Log.i("incompleteItems", "no elements in incomplete order");
                             }else {
                                 Log.i("incompleteItems", incompleteItems.toString());
                                 noIncomplete.setVisibility(View.INVISIBLE);
@@ -289,7 +264,7 @@ public class DashboardFragment extends Fragment {
                                 historyDate.setVisibility(View.INVISIBLE);
                                 history1.setVisibility(View.INVISIBLE);
                                 history2.setVisibility(View.INVISIBLE);
-                                Log.i("history", "没有元素在history");
+                                Log.i("history", "no elements in history order");
                             }else {
                                 Log.i("history", historyDates.toString());
                                 historyItems.add(historySeatOrder.get(0).getDa() + " " + historySeatOrder.get(0).getSt() + ":00 - " + historySeatOrder.get(0).getFt() + ":00");
@@ -313,18 +288,19 @@ public class DashboardFragment extends Fragment {
 
     }
 
+    // by clicking the date element of listView, show the different information
     public void setUpListViewListener(){
         historyDate.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 historyItems.clear();
-                Log.i("清空了",historyItems.toString());
+                Log.i("clear",historyItems.toString());
                 historyItems.add(historySeatOrder.get(position).getDa() + " " + historySeatOrder.get(position).getSt() + ":00 - " + historySeatOrder.get(position).getFt() + ":00");
                 historyItems.add(historySeatOrder.get(position).getLibrary() + " library");
                 historyItems.add(Integer.toString(historySeatOrder.get(position).getI() + 1));
                 historyItems.add(Integer.toString(historySeatOrder.get(position).getJ() + 1));
                 history2.setAdapter( historyItemsAdapter);
-                Log.i("加入了",historyItems.toString());
+                Log.i("added",historyItems.toString());
             }
         });
     }

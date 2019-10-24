@@ -27,7 +27,6 @@ import comp5216.sydney.edu.au.betterstudy.R;
 public class LibraryFragment extends Fragment {
 
     public static boolean flag;
-    //new add fields by Hill
     private static FirebaseFirestore mFirestore;
     private static String userIdFromLogin;
     private FragmentManager manager;
@@ -35,14 +34,14 @@ public class LibraryFragment extends Fragment {
     private ImageView img1;
     private ImageView img2;
 
-    // identify whether the date is before today by Hill
+    // identify whether the date is before today
     public static boolean isDateBeforeToday(Date date) {
         SimpleDateFormat sdf = new SimpleDateFormat(" dd/MM/yyyy ");
         Date today = new Date();
         String todayStr = sdf.format(today);
         try {
             Date todayZero = sdf.parse(todayStr);
-            Log.i("当前时间零点", todayZero.toString());
+            Log.i("Library", todayZero.toString());
             if (date.before(todayZero)) {
                 return true;
             } else {
@@ -59,10 +58,10 @@ public class LibraryFragment extends Fragment {
     public static boolean isDateAfterToday(Date date) {
         Date today = new Date();
         if (date.after(today)) {
-            Log.i("当前时间零点", "11111");
+            Log.i("Library", "11111");
             return true;
         } else {
-            Log.i("当前时间零点", "22222");
+            Log.i("Library", "22222");
             return false;
         }
     }
@@ -73,8 +72,8 @@ public class LibraryFragment extends Fragment {
         String currentTime = sdf.format(new Date());
         int current = Integer.parseInt(currentTime);
         int finish = Integer.parseInt(finishTime);
-        Log.i("判断当天时间finish", String.valueOf(finish));
-        Log.i("判断当天时间current", String.valueOf(current));
+        Log.i("Library", String.valueOf(finish));
+        Log.i("Library", String.valueOf(current));
         if (finish < current) {
             return true;
         } else {
@@ -82,7 +81,7 @@ public class LibraryFragment extends Fragment {
         }
     }
 
-    //judge
+    //judge whether the user has incomplete order
     public static void isUserHasIncompleteOrder() {
 
 
@@ -102,7 +101,7 @@ public class LibraryFragment extends Fragment {
                                 SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
                                 try {
                                     Date captureDate = format.parse(dateStr);
-                                    Log.i("数据库中的时间", captureDate.toString() + "  " + dateStr);
+                                    Log.i("firestore", captureDate.toString() + "  " + dateStr);
                                     if (isDateBeforeToday(captureDate)) {
                                         continue;
                                     } else if (isDateAfterToday(captureDate)) {
@@ -136,15 +135,7 @@ public class LibraryFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         View root = inflater.inflate(R.layout.fragment_library, container, false);
-/*        final TextView textView = root.findViewById(R.id.text_home);
-        homeViewModel.getText().observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });*/
 
-        //get the userId and init the mFirestore by Hill
         mFirestore = FirebaseFirestore.getInstance();
         userIdFromLogin = getActivity().getIntent().getStringExtra("ID");
 
@@ -158,7 +149,6 @@ public class LibraryFragment extends Fragment {
     }
 
     private void setupImageListener() {
-        //judge if the user has incomplete order by Hill
 
 
         img1.setOnClickListener(new View.OnClickListener() {
