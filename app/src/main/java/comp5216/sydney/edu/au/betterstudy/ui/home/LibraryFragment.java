@@ -74,7 +74,7 @@ public class LibraryFragment extends Fragment {
         int finish = Integer.parseInt(finishTime);
         Log.i("Library", String.valueOf(finish));
         Log.i("Library", String.valueOf(current));
-        if (finish < current) {
+        if (finish <= current) {
             return true;
         } else {
             return false;
