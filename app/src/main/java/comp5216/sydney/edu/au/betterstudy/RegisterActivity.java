@@ -102,7 +102,6 @@ public class RegisterActivity extends AppCompatActivity {
         btn_register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //获取输入在相应控件中的字符串
                 getEditString();
                 //verify what context in
                 if (TextUtils.isEmpty(userName)) {
@@ -125,9 +124,10 @@ public class RegisterActivity extends AppCompatActivity {
                     if (isNetworkConnected()) {
                         String md5Psw = MD5Utils.md5(psw);
                         addData(userName, md5Psw);
+                        Toast.makeText(RegisterActivity.this, "register successfully", Toast.LENGTH_SHORT).show();
                         RegisterActivity.this.finish();
                         startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
-                        Toast.makeText(RegisterActivity.this, "register successfully", Toast.LENGTH_SHORT).show();
+
                     } else {
                         Toast.makeText(RegisterActivity.this, "network error", Toast.LENGTH_SHORT).show();
                     }
