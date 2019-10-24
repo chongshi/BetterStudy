@@ -117,6 +117,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
                 intent.putStringArrayListExtra("userId", listString);
+                intent.putStringArrayListExtra("userEmail", listEmail);
                 startActivity(intent);
             }
         });

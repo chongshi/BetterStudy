@@ -35,7 +35,7 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText et_user_name, et_psw, et_psw_again;
     private String userName, psw, pswAgain, uId;
     private FirebaseFirestore mFirestore;
-    ArrayList<String> userlist;
+    ArrayList<String> userlist, emailList;
     private Random rand;
     int Id;
     private static final String TAG = "RegisterActivity";
@@ -48,6 +48,7 @@ public class RegisterActivity extends AppCompatActivity {
         mFirestore = FirebaseFirestore.getInstance();
         userlist = getIntent().getStringArrayListExtra(
                 "userId");
+        emailList = getIntent().getStringArrayListExtra("userEmail");
         rand = new Random();
         init();
     }
@@ -150,8 +151,8 @@ public class RegisterActivity extends AppCompatActivity {
      */
     private boolean isExistUserName(String userName) {
         boolean has_userName = false;
-        for (int i = 0; i < userlist.size(); i++) {
-            if (userName.equalsIgnoreCase(userlist.get(i))) {
+        for (int i = 0; i < emailList.size(); i++) {
+            if (userName.equalsIgnoreCase(emailList.get(i))) {
                 has_userName = true;
                 break;
             }
