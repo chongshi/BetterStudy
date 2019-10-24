@@ -24,7 +24,7 @@ import comp5216.sydney.edu.au.betterstudy.R;
 public class Seat extends Fragment {
 
 
-    public static List<comp5216.sydney.edu.au.betterstudy.model.Seat> seats = new ArrayList<>();
+    private static List<comp5216.sydney.edu.au.betterstudy.model.Seat> seats = new ArrayList<>();
     private static FirebaseFirestore db = FirebaseFirestore.getInstance();
     String[] S;
     String[] F;
@@ -51,15 +51,13 @@ public class Seat extends Fragment {
 
         super.onCreate(savedInstanceState);
         final String library = getArguments().getString("library");
-        String date1 = getArguments().getString("date1");
-        String date2 = getArguments().getString("date2");
         S = getArguments().getString("S").split(":");
         F = getArguments().getString("F").split(":");
         Toast.makeText(getActivity(), "Library: " + library, Toast.LENGTH_SHORT).show();
         System.out.println(S + "********************" + F);
         View root = inflater.inflate(R.layout.activity_main2, container, false);
 
-        final SeatTable seatTableView = (SeatTable) root.findViewById(R.id.mSearchView);
+        final SeatTable seatTableView = root.findViewById(R.id.mSearchView);
 
         Button button = root.findViewById(R.id.buttonsave);
         button.setOnClickListener(new View.OnClickListener() {
@@ -86,8 +84,7 @@ public class Seat extends Fragment {
             public void onClick(View v) {
 
                 manager.popBackStack();
-                //Intent intent = new Intent(getActivity(), MainActivity.class);
-                //startActivity(intent);
+
             }
         });
 
@@ -96,7 +93,6 @@ public class Seat extends Fragment {
         final int tt = Integer.parseInt(F[1]);
 
         seatTableView.setSeatChecker(new SeatTable.SeatChecker() {
-            String date1 = getArguments().getString("date1");
 
             @Override
             public boolean isValidSeat(int row, int column) {
@@ -129,28 +125,6 @@ public class Seat extends Fragment {
                 return false;
 
 
-
-
-/*
-                if(S[0].equals("21")){
-                    int i;
-                    for (i = Integer.parseInt(S[1]); i < Integer.parseInt(F[1]); i++){
-
-
-                        if(column == 6 && i == 10 ){
-                            return true;
-                        }
-
-                    }
-
-                    return false;
-
-                }else {
-                    return false;
-                }
-*/
-
-
             }
 
             @Override
@@ -180,7 +154,6 @@ public class Seat extends Fragment {
 
         }
 
-        //    loadlist();
         seatTableView.setScreenName(library);
         seatTableView.setMaxSelected(1);
         return root;

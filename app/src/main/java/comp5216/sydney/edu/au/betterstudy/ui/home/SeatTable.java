@@ -40,7 +40,6 @@ import comp5216.sydney.edu.au.betterstudy.R;
 
 public class SeatTable extends View {
 
-    public static boolean check;
     /**
      * 座位已售
      */
@@ -57,6 +56,7 @@ public class SeatTable extends View {
      * 座位不可用
      */
     private static final int SEAT_TYPE_NOT_AVAILABLE = 4;
+    public static boolean check;
     private final boolean DBG = false;
     Paint paint = new Paint();
     Paint overviewPaint = new Paint();
